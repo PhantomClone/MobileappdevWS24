@@ -5,7 +5,7 @@ set -e
 IMAGE_TAG=$(./gradlew -q printVersion)
 
 APP_NAME="quarkus-backend"
-DOCKER_IMAGE="meinuser/$APP_NAME:$IMAGE_TAG"
+DOCKER_IMAGE="localhost:5000/meinuser/$APP_NAME:$IMAGE_TAG"
 K8S_NAMESPACE="default"
 NODE_PORT=30080
 
