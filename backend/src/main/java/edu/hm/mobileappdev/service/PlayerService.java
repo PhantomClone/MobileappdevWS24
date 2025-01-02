@@ -8,6 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -27,12 +28,13 @@ public class PlayerService {
 
     @Transactional
     public Score saveScore(UUID playerId, int value) {
-        Score score = scoreRepository.findByPlayerId(playerId)
-            .orElseGet(() -> createNewScore(playerId));
+        Optional<Score> optionalScore = scoreRepository.findByPlayerId(playerId);
 
-        if (score == null) {
+        if (optionalScore.isEmpty()) {
             return null;
         }
+
+        Score score = optionalScore.get();
 
         score.setValue(value);
         scoreRepository.persist(score);
