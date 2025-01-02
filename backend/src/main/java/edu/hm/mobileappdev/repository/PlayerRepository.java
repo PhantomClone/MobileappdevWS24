@@ -8,8 +8,8 @@ import java.util.UUID;
 
 @ApplicationScoped
 public class PlayerRepository implements PanacheRepository<Player> {
-    public Player findById(UUID id) {
-        return find("id", id).firstResult();
+    public Optional<Player> findById(UUID id) {
+        return find("id", id).firstResultOptional();
     }
     public Optional<Player> findByName(String playerName) {
         return find("name", playerName).firstResultOptional();

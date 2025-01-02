@@ -30,11 +30,19 @@ public class PlayerService {
     public Score saveScore(UUID playerId, int value) {
         Optional<Score> optionalScore = scoreRepository.findByPlayerId(playerId);
 
+        Score score;
         if (optionalScore.isEmpty()) {
-            return null;
-        }
+            Optional<Player> optionalPlayer = playerRepository.findById(playerId);
 
-        Score score = optionalScore.get();
+            if (optionalPlayer.isEmpty()) {
+                return null;
+            }
+
+            score = new Score();
+            score.setPlayer(optionalPlayer.get());
+        } else {
+            score = optionalScore.get();
+        }
 
         score.setValue(value);
         scoreRepository.persist(score);
@@ -55,12 +63,12 @@ public class PlayerService {
 
     private Score createNewScore(UUID playerId) {
         Score score = new Score();
-        Player player = playerRepository.findById(playerId);
-        if (player == null) {
+        Optional<Player> optionalPlayer = playerRepository.findById(playerId);
+        if (optionalPlayer.isEmpty()) {
             return null;
         }
 
-        score.setPlayer(player);
+        score.setPlayer(optionalPlayer.get());
         return score;
     }
 }
