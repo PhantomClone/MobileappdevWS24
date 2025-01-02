@@ -23,7 +23,7 @@ public class PlayerResource {
 
     @POST
     @Path("/{id}/score")
-    public void saveScore(@PathParam("id") UUID playerId, int score) {
+    public void saveScore(@PathParam("id") UUID playerId, @QueryParam("score") int score) {
         playerService.saveScore(playerId, score);
     }
 
