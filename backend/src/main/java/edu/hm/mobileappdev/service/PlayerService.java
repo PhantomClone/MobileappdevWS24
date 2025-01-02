@@ -26,12 +26,18 @@ public class PlayerService {
     }
 
     @Transactional
-    public void saveScore(UUID playerId, int value) {
+    public Score saveScore(UUID playerId, int value) {
         Score score = scoreRepository.findByPlayerId(playerId)
             .orElseGet(() -> createNewScore(playerId));
 
+        if (score == null) {
+            return null;
+        }
+
         score.setValue(value);
         scoreRepository.persist(score);
+
+        return score;
     }
 
     public List<Score> getTopScores(int limit) {
@@ -47,7 +53,12 @@ public class PlayerService {
 
     private Score createNewScore(UUID playerId) {
         Score score = new Score();
-        score.setPlayer(playerRepository.findById(playerId));
+        Player player = playerRepository.findById(playerId);
+        if (player == null) {
+            return null;
+        }
+
+        score.setPlayer(player);
         return score;
     }
 }

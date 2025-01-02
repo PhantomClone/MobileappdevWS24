@@ -7,6 +7,7 @@ import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,8 +26,14 @@ public class PlayerResource {
 
     @POST
     @Path("/{id}/score")
-    public void saveScore(@PathParam("id") UUID playerId, @QueryParam("score") int score) {
-        playerService.saveScore(playerId, score);
+    public Response saveScore(@PathParam("id") UUID playerId, @QueryParam("score") int score) {
+        if (playerService.saveScore(playerId, score) == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                .entity("PlayerId not found.")
+                .build();
+        }
+
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @GET
