@@ -9,11 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Score {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
-    private UUID playerId;
+    @Id
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "player_id", referencedColumnName = "id")
+    private Player player;
     private int value;
 
 }

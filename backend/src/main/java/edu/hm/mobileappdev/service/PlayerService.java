@@ -19,22 +19,35 @@ public class PlayerService {
     ScoreRepository scoreRepository;
 
     @Transactional
-    public UUID createPlayer(String name) {
-        Player player = new Player();
-        player.setName(name);
-        playerRepository.persist(player);
-        return player.getId();
+    public UUID getOrCreatePlayer(String name) {
+        return playerRepository.findByName(name)
+            .map(Player::getId)
+            .orElseGet(() -> createNewPlayer(name));
     }
 
     @Transactional
     public void saveScore(UUID playerId, int value) {
-        Score score = new Score();
-        score.setPlayerId(playerId);
+        Score score = scoreRepository.findByPlayerId(playerId)
+            .orElseGet(() -> createNewScore(playerId));
+
         score.setValue(value);
         scoreRepository.persist(score);
     }
 
     public List<Score> getTopScores(int limit) {
         return scoreRepository.findTopScores(limit);
+    }
+
+    private UUID createNewPlayer(String name) {
+        Player player = new Player();
+        player.setName(name);
+        playerRepository.persist(player);
+        return player.getId();
+    }
+
+    private Score createNewScore(UUID playerId) {
+        Score score = new Score();
+        score.setPlayer(playerRepository.findById(playerId));
+        return score;
     }
 }

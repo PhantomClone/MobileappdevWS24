@@ -1,8 +1,10 @@
 package edu.hm.mobileappdev.resource;
 
+import edu.hm.mobileappdev.dto.PlayerDTO;
 import edu.hm.mobileappdev.entity.Score;
 import edu.hm.mobileappdev.service.PlayerService;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
@@ -17,8 +19,8 @@ public class PlayerResource {
 
     @POST
     @Path("/create")
-    public UUID createPlayer(String name) {
-        return playerService.createPlayer(name);
+    public UUID createPlayer(@Valid PlayerDTO playerDTO) {
+        return playerService.getOrCreatePlayer(playerDTO.getName());
     }
 
     @POST
