@@ -15,6 +15,10 @@ echo "📦 Bauen des Quarkus-Projekts..."
 echo "🐳 Erstellen des Docker-Images..."
 docker build -f src/main/docker/Dockerfile.jvm -t $DOCKER_IMAGE .
 
+
+echo "🐳 Push des Docker-Images..."
+docker push $DOCKER_IMAGE
+
 echo "🗄️ PostgreSQL Deployment erstellen..."
 microk8s kubectl apply -f postgresql-deployment.yaml
 
