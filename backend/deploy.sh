@@ -16,10 +16,10 @@ echo "🐳 Erstellen des Docker-Images..."
 docker build -f src/main/docker/Dockerfile.jvm -t $DOCKER_IMAGE .
 
 echo "🗄️ PostgreSQL Deployment erstellen..."
-kubectl apply -f postgresql-deployment.yaml
+microk8s kubectl apply -f postgresql-deployment.yaml
 
 echo "🚀 Kubernetes Deployment und Service erstellen..."
-cat <<EOF | kubectl apply -f -
+cat <<EOF | microk8s kubectl apply -f -
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -63,7 +63,7 @@ spec:
             cpu: "1000m"
 EOF
 
-cat <<EOF | kubectl apply -f -
+cat <<EOF | microk8s kubectl apply -f -
 apiVersion: v1
 kind: Service
 metadata:
@@ -82,9 +82,9 @@ spec:
 EOF
 
 echo "🕒 Warten, bis die Pods starten..."
-kubectl rollout status deployment/$APP_NAME
+microk8s kubectl rollout status deployment/$APP_NAME
 
-NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
+NODE_IP=$(microk8s kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
 
 echo "✅ Deployment abgeschlossen!"
 echo "🌐 Anwendung verfügbar unter: http://$NODE_IP:$NODE_PORT"
