@@ -1,12 +1,9 @@
 #!/bin/bash
 
-# Skript-Abbruch bei Fehlern
 set -e
 
-# Hole das IMAGE_TAG aus der build.gradle.kts
 IMAGE_TAG=$(./gradlew -q printVersion)
 
-# Variablen
 APP_NAME="quarkus-backend"
 DOCKER_IMAGE="meinuser/$APP_NAME:$IMAGE_TAG"
 K8S_NAMESPACE="default"
@@ -18,11 +15,9 @@ echo "📦 Bauen des Quarkus-Projekts..."
 echo "🐳 Erstellen des Docker-Images..."
 docker build -f src/main/docker/Dockerfile.jvm -t $DOCKER_IMAGE .
 
-# PostgreSQL Deployment und Service erstellen
 echo "🗄️ PostgreSQL Deployment erstellen..."
 kubectl apply -f postgresql-deployment.yaml
 
-# Kubernetes Deployment für Quarkus-App erstellen
 echo "🚀 Kubernetes Deployment und Service erstellen..."
 cat <<EOF | kubectl apply -f -
 apiVersion: apps/v1
@@ -68,7 +63,6 @@ spec:
             cpu: "1000m"
 EOF
 
-# Kubernetes Service für Quarkus-App erstellen
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Service
@@ -90,7 +84,6 @@ EOF
 echo "🕒 Warten, bis die Pods starten..."
 kubectl rollout status deployment/$APP_NAME
 
-# Abrufen der Node-IP
 NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
 
 echo "✅ Deployment abgeschlossen!"
