@@ -32,7 +32,7 @@ dependencies {
 }
 
 group = "edu.hm.mobileappdev"
-version = "1.1-SNAPSHOT"
+version = "1.3-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
