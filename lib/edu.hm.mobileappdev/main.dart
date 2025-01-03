@@ -6,14 +6,14 @@ import 'package:mobileappdev/edu.hm.mobileappdev/widgets/kniffel_game_widget.dar
 import 'package:provider/provider.dart';
 
 void main() {
-  MultiProvider(
+  runApp(MultiProvider(
     providers: [
       Provider<KniffelGameState>(
         create: (_) => _createKniffelGameState(),
       )
     ],
     child: MainApp(),
-  );
+  ));
 }
 
 KniffelGameState _createKniffelGameState() {
@@ -26,6 +26,8 @@ KniffelGameState _createKniffelGameState() {
 }
 
 class MainApp extends StatelessWidget {
+
+  //To change page: context.go('/');
   late final GoRouter _route = GoRouter(
     routes: [
       _createGoRoute('/', KniffelGameWidget()),
@@ -43,6 +45,9 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: "Kniffel",
+      theme: ThemeData(
+        primarySwatch: Colors.teal,
+      ),
       routeInformationParser: _route.routeInformationParser,
       routerDelegate: _route.routerDelegate,
       routeInformationProvider: _route.routeInformationProvider,
