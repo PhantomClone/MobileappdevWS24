@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../model/dice_roll.dart';
 import '../model/kniffel_field.dart';
 import '../state/play_state.dart';
 import 'kniffel_field_widget.dart';
 
 class KniffelGameWidget extends StatefulWidget {
-  final KniffelGameState gameState;
 
-  const KniffelGameWidget({super.key, required this.gameState});
+  const KniffelGameWidget({super.key,});
 
   @override
   State<KniffelGameWidget> createState() => _KniffelGameWidgetState();
@@ -33,14 +33,15 @@ class _KniffelGameWidgetState extends State<KniffelGameWidget> {
 
   void submitScore() {
     if (selectedField != null) {
-      final currentPlayer = widget.gameState.currentPlayer;
+      final gameState = Provider.of<KniffelGameState>(context);
+      final currentPlayer = gameState.currentPlayer;
       final success = currentPlayer.setScore(selectedField!, diceRoll);
       if (success) {
         setState(() {
           selectedDice.clear();
           selectedField = null;
           diceRoll = DiceRoll();
-          widget.gameState.nextTurn();
+          gameState.nextTurn();
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -52,7 +53,8 @@ class _KniffelGameWidgetState extends State<KniffelGameWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final currentPlayer = widget.gameState.currentPlayer;
+    final gameState = Provider.of<KniffelGameState>(context);
+    final currentPlayer = gameState.currentPlayer;
 
     return Scaffold(
       appBar: AppBar(
