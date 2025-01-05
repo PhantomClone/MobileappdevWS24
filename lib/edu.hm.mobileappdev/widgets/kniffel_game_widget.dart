@@ -33,7 +33,7 @@ class _KniffelGameWidgetState extends State<KniffelGameWidget> {
 
   void submitScore() {
     if (selectedField != null) {
-      final gameState = Provider.of<KniffelGameState>(context);
+      final gameState = Provider.of<KniffelGameState>(context, listen: false); // fixed exception "Tried to listen to a value exposed with provider, from outside of the widget tree."
       final currentPlayer = gameState.currentPlayer;
       final success = currentPlayer.setScore(selectedField!, diceRoll);
       if (success) {
