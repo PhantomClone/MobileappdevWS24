@@ -14,6 +14,13 @@ class KniffelGameState {
     _players.add(player);
   }
 
+  void resetPlayers(List<Player> players) {
+    _players
+        ..clear()
+        ..addAll(players);
+    _currentPlayerIndex = 0;
+  }
+
   void nextTurn() {
     if (_players.isNotEmpty) {
       _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.length;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/model/player.dart';
+import 'package:mobileappdev/edu.hm.mobileappdev/screen/home_screen.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/state/play_state.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/widgets/kniffel_game_widget.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +20,8 @@ void main() {
 KniffelGameState _createKniffelGameState() {
   KniffelGameState gameState = KniffelGameState();
 
-  gameState.addPlayer(Player("Max"));
-  gameState.addPlayer(Player("Musterman"));
+  //gameState.addPlayer(Player("Max"));
+  //gameState.addPlayer(Player("Musterman"));
 
   return gameState;
 }
@@ -30,8 +31,8 @@ class MainApp extends StatelessWidget {
   //To change page: context.go('/');
   late final GoRouter _route = GoRouter(
     routes: [
-      _createGoRoute('/', KniffelGameWidget()),
-      _createGoRoute('/play2', KniffelGameWidget()),
+      _createGoRoute('/', HomeScreen()),
+      _createGoRoute('/play', KniffelGameWidget()),
     ],
     initialLocation: "/",
     redirect: (context, state) {
