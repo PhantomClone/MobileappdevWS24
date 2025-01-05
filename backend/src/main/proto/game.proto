@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package edu.hm.mobileappdev.proto;
+
+service KniffelGame {
+  rpc CreateGame (Player) returns (GameId);
+  rpc JoinGame (JoinRequest) returns (Ack);
+  rpc StartGame (GameId) returns (Ack);
+  rpc SendMove (PlayerMove) returns (GameState);
+  rpc ListenForGameUpdates (GameId) returns (stream GameState);
+}
+
+message Player {
+  string playerName = 1;
+}
+
+message PlayerMove {
+  Player player = 1;
+  string gameId = 2;
+  repeated int32 dice = 3;
+  int32 rerollsLeft = 4;
+  KniffelField done = 5;
+}
+
+message GameId {
+  string id = 1;
+}
+
+message JoinRequest {
+  Player player = 1;
+  string gameId = 2;
+}
+
+message Ack {
+  string message = 1;
+}
+
+message GameState {
+  string gameId = 1;
+  repeated Player players = 2;
+  Player currentPlayer = 3;
+  repeated PlayerMove moves = 4;
+  bool gameStarted = 5;
+}
+
+enum KniffelField {
+  none = 0;
+  ones = 1;
+  twos = 2;
+  threes = 3;
+  fours = 4;
+  fives = 5;
+  sixes = 6;
+  threeOfAKind = 7;
+  fourOfAKind = 8;
+  fullHouse = 9;
+  smallStraight = 10;
+  largeStraight = 11;
+  kniffel = 12;
+  chance = 13;
+}

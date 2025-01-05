@@ -10,10 +10,14 @@ import lombok.Setter;
 @Setter
 public class Score {
 
-    @Id
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "player_id", referencedColumnName = "id")
-    private Player player;
-    private int value;
+  @Id
+  @GeneratedValue
+  private Long id;
+
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "player_id", referencedColumnName = "id")
+  private Player player;
+
+  private int value;
 
 }

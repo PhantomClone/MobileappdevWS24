@@ -13,6 +13,7 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Column(unique = true)
     private String name;
 
 }

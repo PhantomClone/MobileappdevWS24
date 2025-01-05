@@ -21,6 +21,7 @@ dependencies {
     implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("io.quarkus:quarkus-hibernate-validator")
     implementation("io.quarkus:quarkus-arc")
+    implementation("io.quarkus:quarkus-grpc")
     compileOnly("org.projectlombok:lombok:1.18.36")
     annotationProcessor("org.projectlombok:lombok:1.18.36")
     testImplementation("io.quarkus:quarkus-junit5")
@@ -32,7 +33,7 @@ dependencies {
 }
 
 group = "edu.hm.mobileappdev"
-version = "1.5-SNAPSHOT"
+version = "1.6-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21

@@ -13,11 +13,11 @@ services:
     networks:
       - quarkus-network
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data-2:/var/lib/postgresql/data-2
 
 networks:
   quarkus-network:
     driver: bridge
 
 volumes:
-  postgres-data:
+  postgres-data-2:
