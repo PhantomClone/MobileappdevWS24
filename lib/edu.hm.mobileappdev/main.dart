@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/model/player.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/screen/home_screen.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/state/play_state.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/widgets/kniffel_game_widget.dart';

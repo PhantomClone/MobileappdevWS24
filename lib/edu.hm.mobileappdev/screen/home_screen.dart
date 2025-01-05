@@ -5,6 +5,8 @@ import 'package:mobileappdev/edu.hm.mobileappdev/model/player.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
