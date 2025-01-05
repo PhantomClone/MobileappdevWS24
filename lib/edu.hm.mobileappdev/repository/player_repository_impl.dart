@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import 'package:mobileappdev/edu.hm.mobileappdev/repository/player.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/repository/player_repository.dart';
+
+//TODO anpassen für unseres
 
 class PlayerRepositoryImplementation implements PlayerRepository {
   final String apiUrl = 'http://10.28.252.23:30080';

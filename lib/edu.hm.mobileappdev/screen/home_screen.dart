@@ -4,6 +4,8 @@ import 'package:mobileappdev/edu.hm.mobileappdev/state/play_state.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/model/player.dart';
 import 'package:go_router/go_router.dart';
 
+//TODO für Online-Modus anpassen
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 

@@ -5,6 +5,8 @@ import '../model/kniffel_field.dart';
 import '../state/play_state.dart';
 import 'kniffel_field_widget.dart';
 
+//TODO +35 bei Score > 63 in Einser - Sechser
+
 class KniffelGameWidget extends StatefulWidget {
 
   const KniffelGameWidget({super.key,});
