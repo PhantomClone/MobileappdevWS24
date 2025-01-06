@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../model/dice_roll.dart';
 import '../model/kniffel_field.dart';
 import '../state/play_state.dart';
 import '../widgets/kniffel_field_widget.dart';
-
-//TODO +35 bei Score > 63 in Einser - Sechser
 
 class KniffelGameScreen extends StatefulWidget {
 
@@ -33,9 +32,18 @@ class _KniffelGameScreenState extends State<KniffelGameScreen> {
     });
   }
 
+  void checkGameOver() {
+    final gameState = Provider.of<KniffelGameState>(context, listen: false);
+    final isGameOver = gameState.players.every((player) =>
+        KniffelField.values.every((field) => player.scoreCard[field] != null));
+    if(isGameOver) {
+      context.go('/result');
+    }
+  }
+
   void submitScore() {
     if (selectedField != null) {
-      final gameState = Provider.of<KniffelGameState>(context, listen: false); // fixed exception "Tried to listen to a value exposed with provider, from outside of the widget tree."
+      final gameState = Provider.of<KniffelGameState>(context, listen: false);
       final currentPlayer = gameState.currentPlayer;
       final success = currentPlayer.setScore(selectedField!, diceRoll);
       if (success) {
@@ -45,6 +53,7 @@ class _KniffelGameScreenState extends State<KniffelGameScreen> {
           diceRoll = DiceRoll();
           gameState.nextTurn();
         });
+        checkGameOver();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Field already filled!')),

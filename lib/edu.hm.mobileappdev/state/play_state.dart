@@ -26,4 +26,10 @@ class KniffelGameState {
       _currentPlayerIndex = (_currentPlayerIndex + 1) % _players.length;
     }
   }
+
+  void resetPlayersToStart(List<Player> players) {
+    for (var player in players) {
+      player.scoreCard.clear();
+    }
+  }
 }
