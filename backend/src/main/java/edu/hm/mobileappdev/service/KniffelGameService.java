@@ -28,6 +28,7 @@ public class KniffelGameService implements KniffelGame {
   @Transactional
   public Uni<GameId> createGame(Player request) {
     String gameId = generateGameCode();
+    System.out.printf("CreateGame request ID: %s & PlayerName: %s\n", gameId, request.getPlayerName());
     return playerRepository.findByName(request.getPlayerName())
         .map(player -> new GameDTO(gameId, player))
         .map(game -> {
@@ -40,6 +41,9 @@ public class KniffelGameService implements KniffelGame {
   @Override
   @Transactional
   public Uni<Ack> joinGame(JoinRequest request) {
+    System.out.printf("JoinRequest with ID: %s & PlayerName: %s\n", request.getGameId(), request.getPlayer().getPlayerName());
+    games.keySet().forEach(gameId -> System.out.println(gameId));
+    System.out.println("---");
     GameDTO game = games.get(request.getGameId());
     if (game == null) {
       return Uni.createFrom().failure(new RuntimeException("Game not found"));

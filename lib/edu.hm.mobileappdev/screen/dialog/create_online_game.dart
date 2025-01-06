@@ -1,0 +1,59 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import '../../online/client.dart';
+import '../../state/play_state.dart';
+
+createGameDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      final playerNameController = TextEditingController();
+
+      return AlertDialog(
+        title: Text('Enter Player Name'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Please enter player name 5 digits:'),
+            TextField(
+              controller: playerNameController,
+              keyboardType: TextInputType.text,
+              maxLength: 15,
+              decoration: InputDecoration(
+                hintText: 'PlayerName',
+                counterText: '',
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final client = Provider.of<KniffelServiceClient>(context, listen: false);
+              final gameState = Provider.of<KniffelGameState>(context, listen: false);
+              client.createGame(playerNameController.text.trim()).then((gameId) {
+
+                gameState.setGameId(gameId.id);
+
+                context.go('/wait_for_players');
+              }).catchError((error) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error creating game: $error')),
+                );
+              });
+            },
+            child: Text('Join Game'),
+          ),
+        ],
+      );
+    },
+  );
+}
