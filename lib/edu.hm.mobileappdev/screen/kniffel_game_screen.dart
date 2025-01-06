@@ -3,19 +3,19 @@ import 'package:provider/provider.dart';
 import '../model/dice_roll.dart';
 import '../model/kniffel_field.dart';
 import '../state/play_state.dart';
-import 'kniffel_field_widget.dart';
+import '../widgets/kniffel_field_widget.dart';
 
 //TODO +35 bei Score > 63 in Einser - Sechser
 
-class KniffelGameWidget extends StatefulWidget {
+class KniffelGameScreen extends StatefulWidget {
 
-  const KniffelGameWidget({super.key,});
+  const KniffelGameScreen({super.key,});
 
   @override
-  State<KniffelGameWidget> createState() => _KniffelGameWidgetState();
+  State<KniffelGameScreen> createState() => _KniffelGameScreenState();
 }
 
-class _KniffelGameWidgetState extends State<KniffelGameWidget> {
+class _KniffelGameScreenState extends State<KniffelGameScreen> {
   late DiceRoll diceRoll;
   final Set<int> selectedDice = {};
   KniffelField? selectedField;

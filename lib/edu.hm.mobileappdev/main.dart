@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/screen/home_screen.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/state/play_state.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/widgets/kniffel_game_widget.dart';
+import 'package:mobileappdev/edu.hm.mobileappdev/screen/kniffel_game_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -31,7 +31,7 @@ class MainApp extends StatelessWidget {
   late final GoRouter _route = GoRouter(
     routes: [
       _createGoRoute('/', HomeScreen()),
-      _createGoRoute('/play', KniffelGameWidget()),
+      _createGoRoute('/play', KniffelGameScreen()),
     ],
     initialLocation: "/",
     redirect: (context, state) {
