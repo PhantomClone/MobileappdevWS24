@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:grpc/grpc.dart';
@@ -10,9 +11,8 @@ class KniffelServiceClient {
 
   KniffelServiceClient() {
     channel = ClientChannel(
-      '10.0.2.2',
-      //'192.168.178.20',
-      port: 8080,
+      '10.28.252.23',
+      port: 30080,
       options: ChannelOptions(
         credentials: ChannelCredentials.insecure(),
       ),
@@ -28,10 +28,10 @@ class KniffelServiceClient {
   }
 
   Future<Ack> joinGame(String gameId, String playerName) async {
-    var joinRequest = JoinRequest();
-    joinRequest.gameId = gameId;
-    joinRequest.player = Player(playerName: playerName);
+    final joinRequest = JoinRequest(gameId: gameId, player: Player(playerName: playerName));
 
+    print("ID: $gameId");
+    print("ID: $playerName");
     final ack = await stub!.joinGame(joinRequest);
     return ack;
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobileappdev/edu.hm.mobileappdev/model/player.dart';
 import 'package:provider/provider.dart';
 
 import '../../online/client.dart';
@@ -56,6 +57,7 @@ joinGameDialog(BuildContext context) {
 
                 client.joinGame(inputText, playerNameController.text.trim()).then((_) {
                   gameState.setGameId(inputText);
+                  gameState.addLocalOnlinePlayer(Player(inputText));
                   Navigator.of(context).pop();
                   context.go('/wait_for_players');
                 }).catchError((error) {

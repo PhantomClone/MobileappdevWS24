@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobileappdev/edu.hm.mobileappdev/online/client.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/screen/home_screen.dart';
+import 'package:mobileappdev/edu.hm.mobileappdev/screen/online_wait_for_players_screen.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/screen/result_screen.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/screen/scoreboard_screen.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/state/play_state.dart';
@@ -12,7 +14,8 @@ void main() {
     providers: [
       Provider<KniffelGameState>(
         create: (_) => _createKniffelGameState(),
-      )
+      ),
+      Provider<KniffelServiceClient>(create: (_) => KniffelServiceClient())
     ],
     child: MainApp(),
   ));
@@ -35,7 +38,9 @@ class MainApp extends StatelessWidget {
       _createGoRoute('/', HomeScreen()),
       _createGoRoute('/play', KniffelGameScreen()),
       _createGoRoute('/result', ResultScreen()),
-      _createGoRoute('/score', ScoreboardScreen())
+      _createGoRoute('/score', ScoreboardScreen()),
+      _createGoRoute('/wait_for_players', OnlineWaitForPlayersScreen()),
+      _createGoRoute('/play_online', KniffelGameScreen()),
     ],
     initialLocation: "/",
     redirect: (context, state) {

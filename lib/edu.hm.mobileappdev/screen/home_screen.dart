@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mobileappdev/edu.hm.mobileappdev/screen/dialog/create_online_game.dart';
+import 'package:mobileappdev/edu.hm.mobileappdev/screen/dialog/join_online_game.dart';
 import 'package:provider/provider.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/state/play_state.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/model/player.dart';
 import 'package:go_router/go_router.dart';
-import '../online/client.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -98,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ? _buildModeSelection()
             : _selectedMode == 'local'
             ? _buildLocalGameSetup(context)
-            : _buildOnlineGameSetup(context),
+            : null,
       ),
     );
   }
@@ -114,8 +115,13 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () => setState(() => _selectedMode = 'online'),
-            child: const Text('Start Online Game'),
+            onPressed: () => joinGameDialog(context),
+            child: const Text('Join Online Game'),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () => createGameDialog(context),
+            child: const Text('Create Online Game'),
           ),
         ],
       ),
@@ -157,45 +163,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: () => _startLocalGame(context),
               child: const Text('Start Game'),
-            ),
-            ElevatedButton(
-              onPressed: _resetToModeSelection,
-              child: const Text('Back'),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildOnlineGameSetup(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: TextField(
-            controller: _onlinePlayerController,
-            decoration: const InputDecoration(
-              labelText: 'Enter Your Name',
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-        if (_errorMessage != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Text(
-              _errorMessage!,
-              style: const TextStyle(color: Colors.red),
-            ),
-          ),
-        const Spacer(),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              onPressed: () => _startOnlineGame(context),
-              child: const Text('Start Online Game'),
             ),
             ElevatedButton(
               onPressed: _resetToModeSelection,
