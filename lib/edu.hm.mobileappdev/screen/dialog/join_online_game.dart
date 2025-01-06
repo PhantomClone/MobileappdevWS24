@@ -4,9 +4,12 @@ import 'package:mobileappdev/edu.hm.mobileappdev/model/player.dart';
 import 'package:provider/provider.dart';
 
 import '../../online/client.dart';
+import '../../repository/player_repository.dart';
 import '../../state/play_state.dart';
 
 joinGameDialog(BuildContext context) {
+  final playerRepository =
+      Provider.of<PlayerRepository>(context, listen: false);
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -51,20 +54,27 @@ joinGameDialog(BuildContext context) {
             onPressed: () {
               final inputText = gameIdController.text.trim();
 
-              if (inputText.length == 5 && RegExp(r'^\d{5}$').hasMatch(inputText)) {
-                final client = Provider.of<KniffelServiceClient>(context, listen: false);
-                final gameState = Provider.of<KniffelGameState>(context, listen: false);
+              if (inputText.length == 5 &&
+                  RegExp(r'^\d{5}$').hasMatch(inputText)) {
+                final client =
+                    Provider.of<KniffelServiceClient>(context, listen: false);
+                final gameState =
+                    Provider.of<KniffelGameState>(context, listen: false);
 
-                client.joinGame(inputText, playerNameController.text.trim()).then((_) {
-                  gameState.setGameId(inputText);
-                  gameState.addLocalOnlinePlayer(Player(inputText));
-                  Navigator.of(context).pop();
-                  context.go('/wait_for_players');
-                }).catchError((error) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error joining game: $error')),
-                  );
-                });
+                playerRepository.addPlayer(inputText).then((_) => {
+                      client
+                          .joinGame(inputText, playerNameController.text.trim())
+                          .then((_) {
+                        gameState.setGameId(inputText);
+                        gameState.addLocalOnlinePlayer(Player(inputText));
+                        Navigator.of(context).pop();
+                        context.go('/wait_for_players');
+                      }).catchError((error) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Error joining game: $error')),
+                        );
+                      })
+                    });
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Please enter exactly 5 digits.')),

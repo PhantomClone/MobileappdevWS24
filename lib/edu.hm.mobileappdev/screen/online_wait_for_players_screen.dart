@@ -33,18 +33,15 @@ class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen>
   }
 
   @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final gameState = Provider.of<KniffelGameState>(context, listen: false);
     final client = Provider.of<KniffelServiceClient>(context, listen: false);
 
     if (gameState.gameId != null) {
       _subscription = client.listenForGameUpdates(gameState.gameId!).listen((serverState) {
+        if (!mounted) {
+          return;
+        }
         gameState.setOnlineGameState(serverState);
         setState(() {
           if (!serverState.gameStarted) {
@@ -54,6 +51,8 @@ class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen>
             gameState.addAllPlayers(newPlayers);
           } else if (!this.gameState.gameStarted) {
             gameState.setPlayers(serverState.players.map((player) => Player(player.playerName)));
+            gameState.setCurrentPlayer(Player(serverState.currentPlayer.playerName));
+            _subscription.cancel();
             context.go('/play_online');
           }
           this.gameState = serverState;

@@ -19,7 +19,11 @@ class KniffelGameState {
   String? get gameId => _gameId;
   game.GameState get currentOnlineGameState => _gameState;
 
-  List<Player> get localOnlinePlayers => List.unmodifiable(_players);
+  List<Player> get localOnlinePlayers => List.unmodifiable(_localOnlinePlayers);
+
+  void setCurrentPlayer(Player player) {
+    _currentPlayerIndex = _players.indexWhere((p) => p.name == player.name);
+  }
 
   void addLocalOnlinePlayer(Player player) {
     _localOnlinePlayers.add(player);

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobileappdev/edu.hm.mobileappdev/model/player.dart';
+import 'package:mobileappdev/edu.hm.mobileappdev/repository/player_repository.dart';
 import 'package:provider/provider.dart';
 
 import '../../online/client.dart';
 import '../../state/play_state.dart';
 
 createGameDialog(BuildContext context) {
+  final playerRepository =
+      Provider.of<PlayerRepository>(context, listen: false);
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -38,20 +41,23 @@ createGameDialog(BuildContext context) {
           ),
           ElevatedButton(
             onPressed: () {
-              final client = Provider.of<KniffelServiceClient>(context, listen: false);
-              final gameState = Provider.of<KniffelGameState>(context, listen: false);
+              final client =
+                  Provider.of<KniffelServiceClient>(context, listen: false);
+              final gameState =
+                  Provider.of<KniffelGameState>(context, listen: false);
               final inputText = playerNameController.text.trim();
-              client.createGame(inputText).then((gameId) {
+              playerRepository.addPlayer(inputText).then((_) => {
+                    client.createGame(inputText).then((gameId) {
+                      gameState.setGameId(gameId.id);
+                      gameState.addLocalOnlinePlayer(Player(inputText));
 
-                gameState.setGameId(gameId.id);
-                gameState.addLocalOnlinePlayer(Player(inputText));
-
-                context.go('/wait_for_players');
-              }).catchError((error) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error creating game: $error')),
-                );
-              });
+                      context.go('/wait_for_players');
+                    }).catchError((error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error creating game: $error')),
+                      );
+                    })
+                  });
             },
             child: Text('Join Game'),
           ),

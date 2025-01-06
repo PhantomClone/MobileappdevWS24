@@ -24,23 +24,21 @@ class _KniffelGameScreenMultiplayerState
   late StreamSubscription<game.GameState> _subscription;
 
   @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-
-  @override
   void initState() {
     final gameState = Provider.of<KniffelGameState>(context, listen: false);
     final client = Provider.of<KniffelServiceClient>(context, listen: false);
+    diceRoll = DiceRoll();
 
-    _subscription = client.listenForGameUpdates(gameState.gameId!).listen((serverState) {
+    _subscription =
+        client.listenForGameUpdates(gameState.gameId!).listen((serverState) {
       setState(() {
         gameState.setOnlineGameState(serverState);
+        gameState.setCurrentPlayer(Player(serverState.currentPlayer.playerName));
         game.PlayerMove playerMove = serverState.moves.last;
+        print(playerMove);
 
-        Player player = gameState.players
-            .firstWhere((player) => player.name == playerMove.player.playerName);
+        Player player = gameState.players.firstWhere(
+            (player) => player.name == playerMove.player.playerName);
         diceRoll = DiceRoll();
         diceRoll.rerollsLeft = playerMove.rerollsLeft;
         diceRoll.dice = playerMove.dice;
@@ -48,16 +46,18 @@ class _KniffelGameScreenMultiplayerState
           player.scoreCard[mapKniffelField(playerMove.done)] = diceRoll;
         }
 
-        if (playerMove.done != game.KniffelField.none && _isAllowedToInteract(gameState)) {
-          diceRoll = DiceRoll();
+        if (playerMove.done != game.KniffelField.none &&
+            _isAllowedToInteract(gameState)) {
           Future.delayed(Duration(seconds: 5), () {
-            client.sendMove(gameState.gameId!, serverState.currentPlayer.playerName, diceRoll.dice, diceRoll.rerollsLeft);
-          });
+            var diceRoll = DiceRoll();
+            client.sendMove(
+                gameState.gameId!,
+                serverState.currentPlayer.playerName,
+                diceRoll.dice,
+                diceRoll.rerollsLeft,
+                game.KniffelField.none);
+          }).ignore();
           return;
-        }
-
-        if (_isAllowedToInteract(gameState)) {
-          diceRoll = DiceRoll();
         }
       });
     });
@@ -65,18 +65,69 @@ class _KniffelGameScreenMultiplayerState
   }
 
   @override
+  void selectDice(bool isSelected, int index) {
+    final gameState = Provider.of<KniffelGameState>(context, listen: false);
+    if (_isAllowedToInteract(gameState)) {
+      super.selectDice(isSelected, index);
+    }
+  }
+
+  @override
+  void selectField(KniffelField field) {
+    final gameState = Provider.of<KniffelGameState>(context, listen: false);
+    if (_isAllowedToInteract(gameState)) {
+      super.selectField(field);
+    }
+  }
+
+  @override
   void checkGameOver(BuildContext context) {
-    // TODO: implement checkGameOver
+    final gameState = Provider.of<KniffelGameState>(context, listen: false);
+    final isGameOver = gameState.players.every((player) =>
+        KniffelField.values.every((field) => player.scoreCard[field] != null));
+    if (isGameOver) {
+      Navigator.pushNamed(context, '/result');
+    }
   }
 
   @override
   void rerollSelectedDice() {
-    // TODO: implement rerollSelectedDice
+    final gameState = Provider.of<KniffelGameState>(context, listen: false);
+    if (_isAllowedToInteract(gameState)) {
+      setState(() {
+        final client =
+        Provider.of<KniffelServiceClient>(context, listen: false);
+        diceRoll.reroll(selectedDice.toList());
+        client.sendMove(gameState.gameId!, gameState.currentPlayer.name, diceRoll.dice,
+            diceRoll.rerollsLeft, game.KniffelField.none);
+        selectedDice.clear();
+      });
+    }
   }
 
   @override
   void submitScore(BuildContext context) {
-    // TODO: implement submitScore
+    if (selectedField != null) {
+      final gameState = Provider.of<KniffelGameState>(context, listen: false);
+      final currentPlayer = gameState.currentPlayer;
+      final success = currentPlayer.setScore(selectedField!, diceRoll);
+      if (success) {
+        setState(() {
+          final client =
+          Provider.of<KniffelServiceClient>(context, listen: false);
+
+          client.sendMove(gameState.gameId!, currentPlayer.name, diceRoll.dice,
+              diceRoll.rerollsLeft, mapKniffelFieldB(selectedField!));
+          selectedDice.clear();
+          selectedField = null;
+        });
+        checkGameOver(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Field already filled!')),
+        );
+      }
+    }
   }
 
   @override
@@ -85,9 +136,41 @@ class _KniffelGameScreenMultiplayerState
   }
 
   bool _isAllowedToInteract(KniffelGameState gameState) {
-    return gameState.localOnlinePlayers
-        .map((player) => player.name)
-        .any((playerName) => gameState.currentOnlineGameState.currentPlayer.playerName == playerName);
+    return gameState.localOnlinePlayers.map((player) => player.name).any(
+        (playerName) =>
+            gameState.currentOnlineGameState.currentPlayer.playerName ==
+            playerName);
+  }
+
+  game.KniffelField mapKniffelFieldB(KniffelField field) {
+    switch (field) {
+      case KniffelField.ones:
+        return game.KniffelField.ones;
+      case KniffelField.twos:
+        return game.KniffelField.twos;
+      case KniffelField.threes:
+        return game.KniffelField.threes;
+      case KniffelField.fours:
+        return game.KniffelField.fours;
+      case KniffelField.fives:
+        return game.KniffelField.fives;
+      case KniffelField.sixes:
+        return game.KniffelField.sixes;
+      case KniffelField.threeOfAKind:
+        return game.KniffelField.threeOfAKind;
+      case KniffelField.fourOfAKind:
+        return game.KniffelField.fourOfAKind;
+      case KniffelField.fullHouse:
+        return game.KniffelField.fullHouse;
+      case KniffelField.smallStraight:
+        return game.KniffelField.smallStraight;
+      case KniffelField.largeStraight:
+        return game.KniffelField.largeStraight;
+      case KniffelField.kniffel:
+        return game.KniffelField.kniffel;
+      case KniffelField.chance:
+        return game.KniffelField.chance;
+    }
   }
 
   KniffelField mapKniffelField(game.KniffelField field) {

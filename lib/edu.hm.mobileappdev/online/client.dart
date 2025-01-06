@@ -42,13 +42,14 @@ class KniffelServiceClient {
     return ack;
   }
 
-  Future<GameState> sendMove(String gameId, String playerName, List<int> dice, int rerollsLeft) async {
+  Future<GameState> sendMove(String gameId, String playerName, List<int> dice, int rerollsLeft, KniffelField done) async {
     final player = Player()..playerName = playerName;
     final move = PlayerMove()
       ..player = player
       ..gameId = gameId
       ..dice.addAll(dice)
-      ..rerollsLeft = rerollsLeft;
+      ..rerollsLeft = rerollsLeft
+      ..done = done;
 
     final gameState = await stub!.sendMove(move);
     return gameState;

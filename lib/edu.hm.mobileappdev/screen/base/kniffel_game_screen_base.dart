@@ -42,11 +42,7 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
               return GestureDetector(
                 onTap: () {
                   setState(() {
-                    if (isSelected) {
-                      selectedDice.remove(index);
-                    } else {
-                      selectedDice.add(index);
-                    }
+                    selectDice(isSelected, index);
                   });
                 },
                 child: Container(
@@ -80,7 +76,7 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
                   diceRoll: currentPlayer.scoreCard[field],
                   onTap: () {
                     setState(() {
-                      selectedField = field;
+                      selectField(field);
                     });
                   },
                   isSelected: selectedField == field,
@@ -95,6 +91,18 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
         ],
       ),
     );
+  }
+
+  void selectField(KniffelField field) {
+    selectedField = field;
+  }
+
+  void selectDice(bool isSelected, int index) {
+    if (isSelected) {
+      selectedDice.remove(index);
+    } else {
+      selectedDice.add(index);
+    }
   }
 
   String getTitle();
