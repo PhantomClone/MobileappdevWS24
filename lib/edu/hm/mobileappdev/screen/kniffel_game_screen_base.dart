@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/model/player.dart';
 import 'package:provider/provider.dart';
-import '../../model/dice_roll.dart';
-import '../../model/kniffel_field.dart';
-import '../../state/play_state.dart';
-import '../kniffel_field_screen.dart';
+import '../model/dice_roll.dart';
+import '../model/kniffel_field.dart';
+import '../state/play_state.dart';
+import 'kniffel_field_screen.dart';
 
 abstract class KniffelGameScreenBase<T extends StatefulWidget>
     extends State<T> {
@@ -26,6 +26,7 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
     return Scaffold(
       appBar: AppBar(
         title: Text(getTitle()),
+        backgroundColor: Colors.teal,
       ),
       resizeToAvoidBottomInset: false,
       body: Column(

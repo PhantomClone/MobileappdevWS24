@@ -16,17 +16,16 @@ createGameDialog(BuildContext context) {
       final playerNameController = TextEditingController();
 
       return AlertDialog(
-        title: Text('Enter Player Name'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Please enter player name 5 digits:'),
+            Text('Bitte gib deinen Spieler Name ein'),
             TextField(
               controller: playerNameController,
               keyboardType: TextInputType.text,
               maxLength: 15,
               decoration: InputDecoration(
-                hintText: 'PlayerName',
+                hintText: 'Spieler Name',
                 counterText: '',
               ),
             ),
@@ -37,7 +36,7 @@ createGameDialog(BuildContext context) {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('Cancel'),
+            child: Text('Abbrechen'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -59,7 +58,7 @@ createGameDialog(BuildContext context) {
                     })
                   });
             },
-            child: Text('Create Game'),
+            child: Text('Spiel erstellen'),
           ),
         ],
       );

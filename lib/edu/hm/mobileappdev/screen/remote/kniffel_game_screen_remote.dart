@@ -3,24 +3,24 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/model/dice_roll.dart';
 import 'package:provider/provider.dart';
-import '../../../../generated/game.pb.dart' as game;
-import '../../../../generated/game.pbenum.dart' as gamee;
-import '../model/kniffel_field.dart';
-import '../model/player.dart';
-import '../online/client.dart';
-import './base/kniffel_game_screen_base.dart';
-import '../state/play_state.dart';
+import '../../../../../generated/game.pb.dart' as game;
+import '../../../../../generated/game.pbenum.dart' as gamee;
+import '../../model/kniffel_field.dart';
+import '../../model/player.dart';
+import '../../online/client.dart';
+import '../kniffel_game_screen_base.dart';
+import '../../state/play_state.dart';
 
-class KniffelGameScreenMultiplayer extends StatefulWidget {
-  const KniffelGameScreenMultiplayer({super.key});
+class KniffelGameScreenRemote extends StatefulWidget {
+  const KniffelGameScreenRemote({super.key});
 
   @override
-  State<KniffelGameScreenMultiplayer> createState() =>
-      _KniffelGameScreenMultiplayerState();
+  State<KniffelGameScreenRemote> createState() =>
+      _KniffelGameScreenRemoteState();
 }
 
-class _KniffelGameScreenMultiplayerState
-    extends KniffelGameScreenBase<KniffelGameScreenMultiplayer> {
+class _KniffelGameScreenRemoteState
+    extends KniffelGameScreenBase<KniffelGameScreenRemote> {
   late StreamSubscription<game.GameState> _subscription;
 
   @override

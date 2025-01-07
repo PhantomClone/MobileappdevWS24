@@ -4,9 +4,10 @@ import 'package:mobileappdev/edu/hm/mobileappdev/online/client.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/repository/player_repository.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/repository/player_repository_impl.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/screen/home_screen.dart';
-import 'package:mobileappdev/edu/hm/mobileappdev/screen/kniffel_game_screen_multiplayer.dart';
-import 'package:mobileappdev/edu/hm/mobileappdev/screen/kniffel_game_screen_single.dart';
-import 'package:mobileappdev/edu/hm/mobileappdev/screen/online_wait_for_players_screen.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/local/local_game_setup_screen.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/remote/kniffel_game_screen_remote.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/local/kniffel_game_screen_local.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/remote/online_wait_for_players_screen.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/screen/result_screen.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/screen/scoreboard_screen.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/state/play_state.dart';
@@ -36,15 +37,15 @@ KniffelGameState _createKniffelGameState() {
 
 class MainApp extends StatelessWidget {
 
-  //To change page: context.go('/');
   late final GoRouter _route = GoRouter(
     routes: [
       _createGoRoute('/', HomeScreen()),
-      _createGoRoute('/play', KniffelGameScreenSingle()),
+      _createGoRoute('/localGameSetup', LocalGameSetupScreen()),
+      _createGoRoute('/play', KniffelGameScreenLocal()),
       _createGoRoute('/result', ResultScreen()),
       _createGoRoute('/score', ScoreboardScreen()),
       _createGoRoute('/wait_for_players', OnlineWaitForPlayersScreen()),
-      _createGoRoute('/play_online', KniffelGameScreenMultiplayer()),
+      _createGoRoute('/play_online', KniffelGameScreenRemote()),
     ],
     initialLocation: "/",
     redirect: (context, state) {

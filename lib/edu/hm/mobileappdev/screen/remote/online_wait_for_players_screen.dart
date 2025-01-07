@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobileappdev/generated/game.pbgrpc.dart' as game;
 import 'package:provider/provider.dart';
-import '../model/player.dart';
-import '../online/client.dart';
-import '../state/play_state.dart';
+import '../../model/player.dart';
+import '../../online/client.dart';
+import '../../state/play_state.dart';
 
 class OnlineWaitForPlayersScreen extends StatefulWidget {
   const OnlineWaitForPlayersScreen({super.key});
@@ -63,6 +63,7 @@ class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text('Game ID: ${gameState.gameId ?? 'Loading...'}'),
+        backgroundColor: Colors.teal,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -17,27 +17,27 @@ joinGameDialog(BuildContext context) {
       final gameIdController = TextEditingController();
 
       return AlertDialog(
-        title: Text('Enter Player Name & Game ID'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Please enter player name:'),
+            Text('Bitte gib deinen Spieler Name ein'),
             TextField(
               controller: playerNameController,
               keyboardType: TextInputType.text,
               maxLength: 15,
               decoration: InputDecoration(
-                hintText: 'PlayerName',
+                hintText: 'Spieler Name',
                 counterText: '',
               ),
             ),
-            Text('Please enter exactly 5 digits:'),
+            SizedBox(height: 5,),
+            Text('Bitte gib denn fünf Stelligen Zahlen Code ein'),
             TextField(
               controller: gameIdController,
               keyboardType: TextInputType.number,
               maxLength: 5,
               decoration: InputDecoration(
-                hintText: 'Game ID (5 digits)',
+                hintText: 'Game ID (5 zahlen)',
                 counterText: '',
               ),
             ),
@@ -48,7 +48,7 @@ joinGameDialog(BuildContext context) {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('Cancel'),
+            child: Text('Abbrechen'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -79,11 +79,11 @@ joinGameDialog(BuildContext context) {
                     });
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please enter exactly 5 digits.')),
+                  SnackBar(content: Text('Bitte gib genau 5 zahlen ein.')),
                 );
               }
             },
-            child: Text('Join Game'),
+            child: Text('Spiel beitretten'),
           ),
         ],
       );
