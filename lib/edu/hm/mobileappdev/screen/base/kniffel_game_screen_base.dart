@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/model/player.dart';
 import 'package:provider/provider.dart';
 import '../../model/dice_roll.dart';
 import '../../model/kniffel_field.dart';
@@ -12,16 +12,9 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
   final Set<int> selectedDice = {};
   KniffelField? selectedField;
 
-  void rerollSelectedDice();
+  String getTitle();
 
-  void checkGameOver(BuildContext context) {
-    final gameState = Provider.of<KniffelGameState>(context, listen: false);
-    final isGameOver = gameState.players.every((player) =>
-        KniffelField.values.every((field) => player.scoreCard[field] != null));
-    if (isGameOver) {
-      Navigator.pushNamed(context, '/result');
-    }
-  }
+  void rerollSelectedDice();
 
   void submitScore(BuildContext context);
 
@@ -57,101 +50,124 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
             ),
           ),
           SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(diceRoll.dice.length, (index) {
-              final isSelected = selectedDice.contains(index);
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectDice(isSelected, index);
-                  });
-                },
-                child: Container(
-                  margin: EdgeInsets.all(8),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: isSelected ? Colors.blue : Colors.grey,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    diceRoll.dice[index].toString(),
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                ),
-              );
-            }),
-          ),
+          buildDiceRow(),
           SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: diceRoll.rerollsLeft > 0 && selectedDice.isNotEmpty
-                ? rerollSelectedDice
-                : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: diceRoll.rerollsLeft > 0 && selectedDice.isNotEmpty
-                  ? Colors.blue
-                  : diceRoll.rerollsLeft > 0
-                  ? Colors.grey
-                  : Colors.red,
-            ),
-            child: Text(
-              diceRoll.rerollsLeft == 0
-                  ? 'Keine Neuversuche mehr übrig'
-                  : (selectedDice.isEmpty
-                  ? 'Wähle Würfel aus'
-                  : 'Neu werfen'),
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: diceRoll.rerollsLeft == 0
-                    ? Colors.white
-                    : (selectedDice.isEmpty ? Colors.black54 : Colors.white),
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          buildRerollButton(),
           SizedBox(height: 16),
-          Expanded(
-            child: ListView(
-              children: KniffelField.values.map((field) {
-                return KniffelFieldScreen(
-                  field: field,
-                  diceRoll: currentPlayer.scoreCard[field],
-                  onTap: () {
-                    setState(() {
-                      selectField(field);
-                    });
-                  },
-                  isSelected: selectedField == field,
-                );
-              }).toList(),
-            ),
-          ),
-          ElevatedButton(
-            onPressed:
-                selectedField != null ? () => submitScore(context) : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: selectedField == null
-                  ? Colors.grey
-                  : selectedField!.getSum(diceRoll) == 0
-                      ? Colors.red
-                      : Colors.green,
-            ),
-            child: Text(
-              selectedField == null
-                  ? 'Wähle ein Feld'
-                  : selectedField!.getSum(diceRoll) == 0
-                      ? 'Streiche das Feld ${selectedField!.name}'
-                      : 'Setze die Würfel auf ${selectedField!.name} (+${selectedField!.getSum(diceRoll)} Punkte)',
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          )
+          buildKniffelFields(currentPlayer),
+          buildSetDiceToFieldButton(context),
+          SizedBox(height: 10)
         ],
       ),
     );
+  }
+
+  ElevatedButton buildSetDiceToFieldButton(BuildContext context) {
+    return ElevatedButton(
+          onPressed:
+              selectedField != null ? () => submitScore(context) : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: selectedField == null
+                ? Colors.grey
+                : selectedField!.getSum(diceRoll) == 0
+                    ? Colors.red
+                    : Colors.green,
+          ),
+          child: Text(
+            selectedField == null
+                ? 'Wähle ein Feld'
+                : selectedField!.getSum(diceRoll) == 0
+                    ? 'Streiche das Feld ${selectedField!.name}'
+                    : 'Setze die Würfel auf ${selectedField!.name} (+${selectedField!.getSum(diceRoll)} Punkte)',
+            textAlign: TextAlign.center,
+          ),
+        );
+  }
+
+  Expanded buildKniffelFields(Player currentPlayer) {
+    return Expanded(
+          child: ListView(
+            children: KniffelField.values.map((field) {
+              return KniffelFieldScreen(
+                field: field,
+                diceRoll: currentPlayer.scoreCard[field],
+                onTap: () {
+                  setState(() {
+                    selectField(field);
+                  });
+                },
+                isSelected: selectedField == field,
+              );
+            }).toList(),
+          ),
+        );
+  }
+
+  Row buildDiceRow() {
+    return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(diceRoll.dice.length, (index) {
+            final isSelected = selectedDice.contains(index);
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectDice(isSelected, index);
+                });
+              },
+              child: Container(
+                margin: EdgeInsets.all(8),
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.blue : Colors.grey,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  diceRoll.dice[index].toString(),
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ),
+            );
+          }),
+        );
+  }
+
+  ElevatedButton buildRerollButton() {
+    return ElevatedButton(
+          onPressed: diceRoll.rerollsLeft > 0 && selectedDice.isNotEmpty
+              ? rerollSelectedDice
+              : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: diceRoll.rerollsLeft > 0 && selectedDice.isNotEmpty
+                ? Colors.blue
+                : diceRoll.rerollsLeft > 0
+                ? Colors.grey
+                : Colors.red,
+          ),
+          child: Text(
+            diceRoll.rerollsLeft == 0
+                ? 'Keine Neuversuche mehr übrig'
+                : (selectedDice.isEmpty
+                ? 'Wähle Würfel aus'
+                : 'Neu werfen'),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: diceRoll.rerollsLeft == 0
+                  ? Colors.white
+                  : (selectedDice.isEmpty ? Colors.black54 : Colors.white),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        );
+  }
+
+  void checkGameOver(BuildContext context) {
+    final gameState = Provider.of<KniffelGameState>(context, listen: false);
+    final isGameOver = gameState.players.every((player) =>
+        KniffelField.values.every((field) => player.scoreCard[field] != null));
+    if (isGameOver) {
+      Navigator.pushNamed(context, '/result');
+    }
   }
 
   void selectField(KniffelField field) {
@@ -166,5 +182,4 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
     }
   }
 
-  String getTitle();
 }

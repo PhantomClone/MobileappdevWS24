@@ -15,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<TextEditingController> _playerControllers = [TextEditingController()];
-  final TextEditingController _onlinePlayerController = TextEditingController();
   String? _errorMessage;
   String? _selectedMode; // local/ online game selection
 
@@ -59,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
       for (final controller in _playerControllers) {
         controller.clear();
       }
-      _onlinePlayerController.clear();
     });
   }
 
@@ -68,7 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
     for (final controller in _playerControllers) {
       controller.dispose();
     }
-    _onlinePlayerController.dispose();
     super.dispose();
   }
 
