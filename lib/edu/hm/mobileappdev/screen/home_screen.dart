@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/screen/dialog/create_online_game.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/screen/dialog/join_online_game.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/dialog/create_online_game.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/dialog/join_online_game.dart';
 import 'package:provider/provider.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/state/play_state.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/model/player.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/state/play_state.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/model/player.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -48,21 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       setState(() {
         _errorMessage = 'Please add at least one player before starting the game.';
-      });
-    }
-  }
-
-  void _startOnlineGame(BuildContext context) {
-    final playerName = _onlinePlayerController.text.trim();
-    if (playerName.isNotEmpty) {
-
-      // TODO implement online game!!
-
-      print('Online game started for player: $playerName');
-      context.go('/play');
-    } else {
-      setState(() {
-        _errorMessage = 'Please enter your name before starting the game.';
       });
     }
   }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:mobileappdev/edu.hm.mobileappdev/repository/player.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/repository/player_repository.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/repository/player.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/repository/player_repository.dart';
 
 class PlayerRepositoryImplementation implements PlayerRepository {
   final String apiUrl = 'http://10.28.252.23:30080';
@@ -37,7 +37,7 @@ class PlayerRepositoryImplementation implements PlayerRepository {
     }
   }
 
-  Future<List<Player>> getPlayersRanking({int limit = 10}) async {
+  Future<List<PlayerDTO>> getPlayersRanking({int limit = 10}) async {
     final uri = Uri.parse('$apiUrl/players/ranking?limit=$limit');
     final response = await http.get(
       uri,
@@ -46,7 +46,7 @@ class PlayerRepositoryImplementation implements PlayerRepository {
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      return data.map((e) => Player.fromJson(e)).toList();
+      return data.map((e) => PlayerDTO.fromJson(e)).toList();
     } else {
       throw Exception(
           'Error while trying to get players ranking: ${response.body}');

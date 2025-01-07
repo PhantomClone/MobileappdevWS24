@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/model/dice_roll.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/model/dice_roll.dart';
 import 'package:provider/provider.dart';
-import '../../generated/game.pb.dart' as game;
-import '../../generated/game.pbenum.dart' as gamee;
+import '../../../../generated/game.pb.dart' as game;
+import '../../../../generated/game.pbenum.dart' as gamee;
 import '../model/kniffel_field.dart';
 import '../model/player.dart';
 import '../online/client.dart';
@@ -35,7 +35,6 @@ class _KniffelGameScreenMultiplayerState
         gameState.setOnlineGameState(serverState);
         gameState.setCurrentPlayer(Player(serverState.currentPlayer.playerName));
         game.PlayerMove playerMove = serverState.moves.last;
-        print(playerMove);
 
         Player player = gameState.players.firstWhere(
             (player) => player.name == playerMove.player.playerName);

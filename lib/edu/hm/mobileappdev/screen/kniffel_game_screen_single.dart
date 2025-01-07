@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../model/dice_roll.dart';
 import '../model/kniffel_field.dart';
 import '../state/play_state.dart';
-import './base/kniffel_game_screen_base.dart';
+import 'base/kniffel_game_screen_base.dart';
 
 class KniffelGameScreenSingle extends StatefulWidget {
   const KniffelGameScreenSingle({super.key});

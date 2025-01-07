@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/model/kniffel_field.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/model/kniffel_field.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 

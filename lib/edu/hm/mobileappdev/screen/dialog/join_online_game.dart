@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/model/player.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/model/player.dart';
 import 'package:provider/provider.dart';
 
 import '../../online/client.dart';
@@ -61,12 +61,14 @@ joinGameDialog(BuildContext context) {
                 final gameState =
                     Provider.of<KniffelGameState>(context, listen: false);
 
-                playerRepository.addPlayer(inputText).then((_) => {
+                final playerName = playerNameController.text.trim();
+
+                playerRepository.addPlayer(playerName).then((_) => {
                       client
-                          .joinGame(inputText, playerNameController.text.trim())
+                          .joinGame(inputText, playerName)
                           .then((_) {
                         gameState.setGameId(inputText);
-                        gameState.addLocalOnlinePlayer(Player(inputText));
+                        gameState.addLocalOnlinePlayer(Player(playerName));
                         Navigator.of(context).pop();
                         context.go('/wait_for_players');
                       }).catchError((error) {

@@ -11,7 +11,6 @@ class DiceRoll {
 
   void reroll(List<int> diceToReroll) {
     if (rerollsLeft <= 0) {
-      print('No rerolls left.');
       return;
     }
     for (var index in diceToReroll) {

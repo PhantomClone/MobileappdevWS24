@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/model/player.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/repository/player_repository.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/model/player.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/repository/player_repository.dart';
 import 'package:provider/provider.dart';
 
 import '../../online/client.dart';
@@ -59,7 +59,7 @@ createGameDialog(BuildContext context) {
                     })
                   });
             },
-            child: Text('Join Game'),
+            child: Text('Create Game'),
           ),
         ],
       );

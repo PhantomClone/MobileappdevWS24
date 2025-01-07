@@ -11,9 +11,9 @@ class Player {
 
   bool setScore(KniffelField field, DiceRoll roll) {
     if (scoreCard[field] != null) {
-      print('Field $field is already filled.');
       return false;
     }
+
     scoreCard[field] = roll;
     return true;
   }

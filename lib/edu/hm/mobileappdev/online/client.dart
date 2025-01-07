@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:grpc/grpc.dart';
 
-import '../../generated/game.pbgrpc.dart';
+import '../../../../generated/game.pbgrpc.dart';
 
 class KniffelServiceClient {
   ClientChannel? channel;
@@ -30,8 +30,6 @@ class KniffelServiceClient {
   Future<Ack> joinGame(String gameId, String playerName) async {
     final joinRequest = JoinRequest(gameId: gameId, player: Player(playerName: playerName));
 
-    print("ID: $gameId");
-    print("ID: $playerName");
     final ack = await stub!.joinGame(joinRequest);
     return ack;
   }

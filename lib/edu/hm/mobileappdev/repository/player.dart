@@ -1,16 +1,16 @@
-class Player {
+class PlayerDTO {
   final String id;
   final String name;
   final int score;
 
-  Player({
+  PlayerDTO({
     required this.id,
     required this.name,
     required this.score,
   });
 
-  factory Player.fromJson(Map<String, dynamic> json) {
-    return Player(
+  factory PlayerDTO.fromJson(Map<String, dynamic> json) {
+    return PlayerDTO(
       id: json['id'],
       name: json['name'],
       score: json['score'],

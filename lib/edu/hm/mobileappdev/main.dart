@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/online/client.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/repository/player_repository.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/repository/player_repository_impl.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/screen/home_screen.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/screen/kniffel_game_screen_multiplayer.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/screen/kniffel_game_screen_single.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/screen/online_wait_for_players_screen.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/screen/result_screen.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/screen/scoreboard_screen.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/state/play_state.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/online/client.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/repository/player_repository.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/repository/player_repository_impl.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/home_screen.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/kniffel_game_screen_multiplayer.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/kniffel_game_screen_single.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/online_wait_for_players_screen.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/result_screen.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/scoreboard_screen.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/state/play_state.dart';
 import 'package:provider/provider.dart';
 
 void main() {
