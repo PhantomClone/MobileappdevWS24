@@ -54,7 +54,7 @@ class _KniffelGameScreenSingleState
 
   @override
   String getTitle() {
-    return 'Kniffel Game - Singleplayer';
+    return 'Kniffel - Offline';
   }
 
 }

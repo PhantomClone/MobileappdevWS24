@@ -127,7 +127,7 @@ class _KniffelGameScreenMultiplayerState
 
   @override
   String getTitle() {
-    return 'Kniffel Game - Multiplayer';
+    return 'Kniffel - Online';
   }
 
   bool _isAllowedToInteract(KniffelGameState gameState) {

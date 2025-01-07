@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../model/dice_roll.dart';
 import '../../model/kniffel_field.dart';
 import '../../state/play_state.dart';
-import '../../widgets/kniffel_field_widget.dart';
+import '../kniffel_field_screen.dart';
 
 abstract class KniffelGameScreenBase<T extends StatefulWidget>
     extends State<T> {
@@ -33,14 +34,28 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
       appBar: AppBar(
         title: Text(getTitle()),
       ),
+      resizeToAvoidBottomInset: false,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Current Player: ${currentPlayer.name}',
-              style: TextStyle(fontSize: 24)),
+          Text(
+            'Aktueller Spieler: ${currentPlayer.name}',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: 16),
-          Text('Rerolls left: ${diceRoll.rerollsLeft}',
-              style: TextStyle(fontSize: 18)),
+          Text(
+            'Übrige Neuversuche: ${diceRoll.rerollsLeft}',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+              color: Colors.black87,
+            ),
+          ),
           SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -72,13 +87,34 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
             onPressed: diceRoll.rerollsLeft > 0 && selectedDice.isNotEmpty
                 ? rerollSelectedDice
                 : null,
-            child: Text('Reroll Selected Dice'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: diceRoll.rerollsLeft > 0 && selectedDice.isNotEmpty
+                  ? Colors.blue
+                  : diceRoll.rerollsLeft > 0
+                  ? Colors.grey
+                  : Colors.red,
+            ),
+            child: Text(
+              diceRoll.rerollsLeft == 0
+                  ? 'Keine Neuversuche mehr übrig'
+                  : (selectedDice.isEmpty
+                  ? 'Wähle Würfel aus'
+                  : 'Neu werfen'),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: diceRoll.rerollsLeft == 0
+                    ? Colors.white
+                    : (selectedDice.isEmpty ? Colors.black54 : Colors.white),
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
           SizedBox(height: 16),
           Expanded(
             child: ListView(
               children: KniffelField.values.map((field) {
-                return KniffelFieldWidget(
+                return KniffelFieldScreen(
                   field: field,
                   diceRoll: currentPlayer.scoreCard[field],
                   onTap: () {
@@ -92,9 +128,27 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
             ),
           ),
           ElevatedButton(
-            onPressed: selectedField != null ? () => submitScore(context) : null,
-            child: Text('Submit Score'),
+            onPressed:
+                selectedField != null ? () => submitScore(context) : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: selectedField == null
+                  ? Colors.grey
+                  : selectedField!.getSum(diceRoll) == 0
+                      ? Colors.red
+                      : Colors.green,
+            ),
+            child: Text(
+              selectedField == null
+                  ? 'Wähle ein Feld'
+                  : selectedField!.getSum(diceRoll) == 0
+                      ? 'Streiche das Feld ${selectedField!.name}'
+                      : 'Setze die Würfel auf ${selectedField!.name} (+${selectedField!.getSum(diceRoll)} Punkte)',
+              textAlign: TextAlign.center,
+            ),
           ),
+          SizedBox(
+            height: 10,
+          )
         ],
       ),
     );

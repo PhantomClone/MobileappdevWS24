@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import '../model/dice_roll.dart';
 import '../model/kniffel_field.dart';
 
-class KniffelFieldWidget extends StatelessWidget {
+class KniffelFieldScreen extends StatelessWidget {
   final KniffelField field;
   final DiceRoll? diceRoll;
   final VoidCallback? onTap;
   final bool isSelected;
 
-  const KniffelFieldWidget({
+  const KniffelFieldScreen({
     super.key,
     required this.field,
     this.diceRoll,
