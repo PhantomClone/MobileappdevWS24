@@ -13,7 +13,14 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
 
   void rerollSelectedDice();
 
-  void checkGameOver(BuildContext context);
+  void checkGameOver(BuildContext context) {
+    final gameState = Provider.of<KniffelGameState>(context, listen: false);
+    final isGameOver = gameState.players.every((player) =>
+        KniffelField.values.every((field) => player.scoreCard[field] != null));
+    if (isGameOver) {
+      Navigator.pushNamed(context, '/result');
+    }
+  }
 
   void submitScore(BuildContext context);
 

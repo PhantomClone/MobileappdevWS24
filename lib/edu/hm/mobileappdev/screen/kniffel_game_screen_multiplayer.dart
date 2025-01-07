@@ -64,6 +64,12 @@ class _KniffelGameScreenMultiplayerState
   }
 
   @override
+  void checkGameOver(BuildContext context) {
+    _subscription.cancel();
+    super.checkGameOver(context);
+  }
+
+  @override
   void selectDice(bool isSelected, int index) {
     final gameState = Provider.of<KniffelGameState>(context, listen: false);
     if (_isAllowedToInteract(gameState)) {
@@ -76,16 +82,6 @@ class _KniffelGameScreenMultiplayerState
     final gameState = Provider.of<KniffelGameState>(context, listen: false);
     if (_isAllowedToInteract(gameState)) {
       super.selectField(field);
-    }
-  }
-
-  @override
-  void checkGameOver(BuildContext context) {
-    final gameState = Provider.of<KniffelGameState>(context, listen: false);
-    final isGameOver = gameState.players.every((player) =>
-        KniffelField.values.every((field) => player.scoreCard[field] != null));
-    if (isGameOver) {
-      Navigator.pushNamed(context, '/result');
     }
   }
 
