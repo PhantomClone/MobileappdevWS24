@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/repository/player_repository.dart';
-import 'package:mobileappdev/edu.hm.mobileappdev/repository/player.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/repository/player_repository.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/repository/player.dart';
 
 class ScoreboardScreen extends StatefulWidget {
   const ScoreboardScreen({super.key});
@@ -12,7 +12,7 @@ class ScoreboardScreen extends StatefulWidget {
 }
 
 class _ScoreboardScreenState extends State<ScoreboardScreen> {
-  late Future<List<Player>> _playersFuture;
+  late Future<List<PlayerDTO>> _playersFuture;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
             child: const Text('Home'),
           ),
           Expanded(
-            child: FutureBuilder<List<Player>>(
+            child: FutureBuilder<List<PlayerDTO>>(
               future: _playersFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
