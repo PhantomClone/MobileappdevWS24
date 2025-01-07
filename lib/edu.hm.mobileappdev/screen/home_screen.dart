@@ -52,21 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _startOnlineGame(BuildContext context) {
-    final playerName = _onlinePlayerController.text.trim();
-    if (playerName.isNotEmpty) {
-
-      // TODO implement online game!!
-
-      print('Online game started for player: $playerName');
-      context.go('/play');
-    } else {
-      setState(() {
-        _errorMessage = 'Please enter your name before starting the game.';
-      });
-    }
-  }
-
   void _resetToModeSelection() {
     setState(() {
       _selectedMode = null;
