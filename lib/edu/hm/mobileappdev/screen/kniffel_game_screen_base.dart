@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/main.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/model/player.dart';
 import 'package:provider/provider.dart';
 import '../model/dice_roll.dart';
@@ -167,7 +169,7 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
     final isGameOver = gameState.players.every((player) =>
         KniffelField.values.every((field) => player.scoreCard[field] != null));
     if (isGameOver) {
-      Navigator.pushNamed(context, '/result');
+      context.go('/result');
     }
   }
 
