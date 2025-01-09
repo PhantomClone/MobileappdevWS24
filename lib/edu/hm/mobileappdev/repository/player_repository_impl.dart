@@ -7,7 +7,7 @@ class PlayerRepositoryImplementation implements PlayerRepository {
   final String apiUrl = 'http://10.28.252.23:30080';
 
   @override
-  Future<void> addPlayer(String name) async {
+  Future<String> addPlayer(String name) async {
     final uri = Uri.parse('$apiUrl/players/create');
     final Map<String, String> body = {'name': name};
     final response = await http.post(
@@ -16,7 +16,10 @@ class PlayerRepositoryImplementation implements PlayerRepository {
         body: jsonEncode(body)
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return data['id'];
+    } else {
       throw Exception(
           'Error while trying to add new player: ${response.body}');
     }
@@ -52,5 +55,4 @@ class PlayerRepositoryImplementation implements PlayerRepository {
           'Error while trying to get players ranking: ${response.body}');
     }
   }
-
 }
