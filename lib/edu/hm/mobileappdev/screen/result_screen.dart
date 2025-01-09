@@ -3,6 +3,9 @@ import 'package:mobileappdev/edu/hm/mobileappdev/model/kniffel_field.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../model/dice_roll.dart';
+import '../repository/player.dart';
+import '../model/player.dart';
+import '../repository/player_repository_impl.dart';
 import '../state/play_state.dart';
 
 class ResultScreen extends StatefulWidget {
@@ -13,6 +16,34 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
+
+  Future<void> _savePlayerScore(Player player, int totalScore, {int retries = 5}) async {
+    final playerRepository = PlayerRepositoryImplementation();
+
+    try {
+      final playerId = await playerRepository.addPlayer(player.name);
+
+      await playerRepository.addPlayerScore(playerId, totalScore);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Player score erfolgreich gespeichert")),
+      );
+    } catch (e) {
+      if (retries > 0) {
+        print("Fehler beim Speichern. $retries Neuversuche übrig");
+
+        await Future.delayed(Duration(seconds: 2));
+
+        await _savePlayerScore(player, totalScore, retries: retries - 1);
+      } else {
+        print('Fehler nach mehreren Versuchen: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Player score nicht gespeichert :(")),
+        );
+      }
+    }
+  }
+
 
   int calculatePlayerScore(Map<KniffelField, DiceRoll?> scoreCard) {
     int sumUpperFields = 0;
@@ -45,7 +76,8 @@ class _ResultScreenState extends State<ResultScreen> {
 
     final scores = players.map((player) {
       final totalScore = calculatePlayerScore(player.scoreCard);
-      final bonus = totalScore >= 63 ? 35 : 0; // Bonus von 35, wenn mindestens 63 Punkte in den oberen Feldern erreicht wurden
+      _savePlayerScore(player, totalScore);
+      final bonus = totalScore >= 63 ? 35 : 0;
       return {
         'player': player.name,
         'score': totalScore,
@@ -53,7 +85,6 @@ class _ResultScreenState extends State<ResultScreen> {
       };
     }).toList();
 
-    // Sortiere die Spieler nach ihrem Gesamtscore, absteigend
     scores.sort((a, b) => (b['score']! as int) - (a['score'] as int));
 
     return Scaffold(
