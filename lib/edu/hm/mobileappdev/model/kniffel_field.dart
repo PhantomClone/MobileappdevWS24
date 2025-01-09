@@ -277,23 +277,4 @@ extension KniffelFieldExtension on KniffelField {
         return true;
     }
   }
-
-  static int calculateFinalScore(Map<KniffelField, int> fieldScores) {
-    int totalScore = 0;
-    int upperSectionScore = 0;
-
-    for (var field in KniffelFieldExtension.upperSectionFields) {
-      upperSectionScore += fieldScores[field] ?? 0;
-    }
-
-    if (upperSectionScore >= 63) {
-      totalScore += 35;
-    }
-
-    fieldScores.forEach((field, score) {
-      totalScore += score;
-    });
-
-    return totalScore;
-  }
 }
