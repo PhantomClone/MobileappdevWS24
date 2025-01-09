@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               _buildButton(
                 icon: Icons.group,
-                label: 'Trette einem Online Spiel bei',
+                label: 'Tritt einem Online Spiel bei',
                 color: Colors.blue,
                 onPressed: () => joinGameDialog(context),
               ),
