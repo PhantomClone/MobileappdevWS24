@@ -116,9 +116,9 @@ extension KniffelFieldExtension on KniffelField {
             .where((die) => die == 6)
             .fold(0, (prev, element) => prev + element);
       case KniffelField.threeOfAKind:
-        return _sumForCombination(3, roll);
+        return roll.dice.fold(0, (prev, element) => prev + element);
       case KniffelField.fourOfAKind:
-        return _sumForCombination(4, roll);
+        return roll.dice.fold(0, (prev, element) => prev + element);
       case KniffelField.fullHouse:
         return _sumForFullHouse(roll);
       case KniffelField.smallStraight:
@@ -130,20 +130,6 @@ extension KniffelFieldExtension on KniffelField {
       case KniffelField.chance:
         return roll.dice.fold(0, (prev, element) => prev + element);
       }
-  }
-
-  int _sumForCombination(int count, DiceRoll roll) {
-    final frequencies = roll.dice.fold<Map<int, int>>({}, (map, die) {
-      map[die] = (map[die] ?? 0) + 1;
-      return map;
-    });
-
-    final validDice = frequencies.entries
-        .where((entry) => entry.value >= count)
-        .expand((entry) => List.generate(entry.value, (_) => entry.key))
-        .toList();
-
-    return validDice.fold(0, (prev, element) => prev + element);
   }
 
   int _sumForFullHouse(DiceRoll roll) {
@@ -211,12 +197,7 @@ extension KniffelFieldExtension on KniffelField {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Dice: ${roll.dice.join(', ')}',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Sum: $sum',
+                      'Punkte: $sum',
                       style: TextStyle(fontSize: 16, color: Colors.black),
                     ),
                     SizedBox(height: 4),
