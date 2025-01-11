@@ -116,9 +116,9 @@ extension KniffelFieldExtension on KniffelField {
             .where((die) => die == 6)
             .fold(0, (prev, element) => prev + element);
       case KniffelField.threeOfAKind:
-        return roll.dice.fold(0, (prev, element) => prev + element);
+        return _sumForCombination(3, roll);
       case KniffelField.fourOfAKind:
-        return roll.dice.fold(0, (prev, element) => prev + element);
+        return _sumForCombination(4, roll);
       case KniffelField.fullHouse:
         return _sumForFullHouse(roll);
       case KniffelField.smallStraight:
@@ -130,6 +130,20 @@ extension KniffelFieldExtension on KniffelField {
       case KniffelField.chance:
         return roll.dice.fold(0, (prev, element) => prev + element);
       }
+  }
+
+  int _sumForCombination(int count, DiceRoll roll) {
+    final frequencies = roll.dice.fold<Map<int, int>>({}, (map, die) {
+      map[die] = (map[die] ?? 0) + 1;
+      return map;
+    });
+
+    final validDice = frequencies.entries
+        .where((entry) => entry.value >= count)
+        .expand((entry) => List.generate(entry.value, (_) => entry.key))
+        .toList();
+
+    return validDice.isEmpty ? 0 : roll.dice.fold(0, (prev, element) => prev + element);
   }
 
   int _sumForFullHouse(DiceRoll roll) {

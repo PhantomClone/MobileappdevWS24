@@ -3,7 +3,6 @@ import 'package:mobileappdev/edu/hm/mobileappdev/model/kniffel_field.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../model/dice_roll.dart';
-import '../repository/player.dart';
 import '../model/player.dart';
 import '../repository/player_repository_impl.dart';
 import '../state/play_state.dart';
@@ -12,7 +11,7 @@ class ResultScreen extends StatefulWidget {
   const ResultScreen({super.key});
 
   @override
-  _ResultScreenState createState() => _ResultScreenState();
+  State<ResultScreen> createState() => _ResultScreenState();
 }
 
 class _ResultScreenState extends State<ResultScreen> {
@@ -25,21 +24,23 @@ class _ResultScreenState extends State<ResultScreen> {
 
       await playerRepository.addPlayerScore(playerId, totalScore);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Player score erfolgreich gespeichert")),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Player score erfolgreich gespeichert")),
+        );
+      }
     } catch (e) {
       if (retries > 0) {
-        print("Fehler beim Speichern. $retries Neuversuche übrig");
 
         await Future.delayed(Duration(seconds: 2));
 
         await _savePlayerScore(player, totalScore, retries: retries - 1);
       } else {
-        print('Fehler nach mehreren Versuchen: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Player score nicht gespeichert :(")),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Player score nicht gespeichert :(")),
+          );
+        }
       }
     }
   }
@@ -49,12 +50,12 @@ class _ResultScreenState extends State<ResultScreen> {
     int sumUpperFields = 0;
     int totalScore = 0;
 
-    KniffelFieldExtension.upperSectionFields.forEach((field) {
+    for (var field in KniffelFieldExtension.upperSectionFields) {
       final roll = scoreCard[field];
       final fieldScore = roll != null ? field.getSum(roll) : 0;
       sumUpperFields += fieldScore;
       totalScore += fieldScore;
-    });
+    }
 
     if (sumUpperFields >= 63) {
       totalScore += 35;
@@ -69,6 +70,17 @@ class _ResultScreenState extends State<ResultScreen> {
     return totalScore;
   }
 
+  int calculatePlayerScoreBonus(Map<KniffelField, DiceRoll?> scoreCard) {
+    int sumUpperFields = 0;
+    for (var field in KniffelFieldExtension.upperSectionFields) {
+      final roll = scoreCard[field];
+      final fieldScore = roll != null ? field.getSum(roll) : 0;
+      sumUpperFields += fieldScore;
+    }
+
+    return sumUpperFields >= 63 ? 35 : 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     final gameState = Provider.of<KniffelGameState>(context, listen: false);
@@ -77,7 +89,7 @@ class _ResultScreenState extends State<ResultScreen> {
     final scores = players.map((player) {
       final totalScore = calculatePlayerScore(player.scoreCard);
       _savePlayerScore(player, totalScore);
-      final bonus = totalScore >= 63 ? 35 : 0;
+      final bonus = calculatePlayerScoreBonus(player.scoreCard);
       return {
         'player': player.name,
         'score': totalScore,
@@ -118,29 +130,52 @@ class _ResultScreenState extends State<ResultScreen> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: scores.length,
-                  itemBuilder: (context, index) {
-                    final result = scores[index];
-                    return ListTile(
+            Expanded(
+              child: ListView.builder(
+                itemCount: scores.length,
+                itemBuilder: (context, index) {
+                  final result = scores[index];
+                  final bonusAchieved = result['bonus'] != 0;
+
+                  return Card(
+                    elevation: 4,
+                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: ListTile(
                       leading: CircleAvatar(
-                        child: Text('${index + 1}', style: TextStyle(color: Colors.white)),
                         backgroundColor: Colors.teal,
+                        child: Text(
+                          '${index + 1}',
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
                       ),
                       title: Text(
                         '${result['player']}',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      subtitle: Text(
-                        'Punkte: ${result['score']} (Bonus: ${result['bonus']})',
-                        style: TextStyle(fontSize: 16),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Punkte: ${result['score']}',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Bonus: ${bonusAchieved ? '✔ Erhalten' : '✘ Nicht erreicht'}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: bonusAchieved ? Colors.green : Colors.red,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
-              const SizedBox(height: 16),
+            ),
+            const SizedBox(height: 16),
               _buildActionButtons(),
             ],
           ),
