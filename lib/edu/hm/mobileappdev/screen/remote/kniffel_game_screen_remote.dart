@@ -78,10 +78,9 @@ class _KniffelGameScreenRemoteState
   }
 
   @override
-  void selectField(KniffelField field) {
-    final gameState = Provider.of<KniffelGameState>(context, listen: false);
+  void selectField(KniffelField field, KniffelGameState gameState) {
     if (_isAllowedToInteract(gameState)) {
-      super.selectField(field);
+      super.selectField(field, gameState);
     }
   }
 

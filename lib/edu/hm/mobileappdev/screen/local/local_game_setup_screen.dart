@@ -84,7 +84,6 @@ class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Spieler Eingabefelder
                     ..._playerControllers.asMap().entries.map(
                           (entry) {
                         int index = entry.key;
@@ -119,7 +118,6 @@ class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
                         );
                       },
                     ),
-                    // Fehlermeldung anzeigen
                     if (_errorMessage != null)
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -128,14 +126,12 @@ class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
                           style: const TextStyle(color: Colors.red),
                         ),
                       ),
-                    // Button zum Hinzufügen von Spielern
                     if (_playerControllers.length < 4)
                       _buildButton(
                           label: "Spieler hinzufügen",
                           color: Colors.teal,
                           onPressed: _addPlayerField),
                     const SizedBox(height: 100),
-                    // Buttons für das Spielstarten und Zurück
                     _buildButton(
                       label: 'Spiel starten',
                       color: Colors.blue,

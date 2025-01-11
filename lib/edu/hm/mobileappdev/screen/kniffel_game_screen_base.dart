@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobileappdev/edu/hm/mobileappdev/main.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/model/player.dart';
 import 'package:provider/provider.dart';
 import '../model/dice_roll.dart';
@@ -57,15 +56,15 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
           SizedBox(height: 16),
           buildRerollButton(),
           SizedBox(height: 16),
-          buildKniffelFields(currentPlayer),
-          buildSetDiceToFieldButton(context),
+          buildKniffelFields(currentPlayer, gameState),
+          buildSetDiceToFieldButton(context, gameState),
           SizedBox(height: 10)
         ],
       ),
     );
   }
 
-  ElevatedButton buildSetDiceToFieldButton(BuildContext context) {
+  ElevatedButton buildSetDiceToFieldButton(BuildContext context, KniffelGameState gameState) {
     return ElevatedButton(
           onPressed:
               selectedField != null ? () => submitScore(context) : null,
@@ -77,17 +76,30 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
                     : Colors.green,
           ),
           child: Text(
-            selectedField == null
-                ? 'Wähle ein Feld'
-                : selectedField!.getSum(diceRoll) == 0
-                    ? 'Streiche das Feld ${selectedField!.name}'
-                    : 'Setze die Würfel auf ${selectedField!.name} (+${selectedField!.getSum(diceRoll)} Punkte)',
+            _textForSelectedFieldButton(gameState),
             textAlign: TextAlign.center,
           ),
         );
   }
 
-  Expanded buildKniffelFields(Player currentPlayer) {
+  String _textForSelectedFieldButton(KniffelGameState gameState) {
+    if (selectedField == null) {
+      return 'Wähle ein Feld um die Würfel zu setzten';
+    }
+
+    if (gameState.currentPlayer.scoreCard[selectedField] != null) {
+      return 'Das Feld ist schon belegt.';
+    }
+
+    final fieldSum = selectedField!.getSum(diceRoll);
+    if (fieldSum == 0) {
+      return 'Streiche das Feld "${selectedField!.name}"';
+    }
+
+    return 'Setze die Würfel auf "${selectedField!.name}" (+$fieldSum Punkte)';
+  }
+
+  Expanded buildKniffelFields(Player currentPlayer, KniffelGameState gameState) {
     return Expanded(
           child: ListView(
             children: KniffelField.values.map((field) {
@@ -96,7 +108,7 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
                 diceRoll: currentPlayer.scoreCard[field],
                 onTap: () {
                   setState(() {
-                    selectField(field);
+                    selectField(field, gameState);
                   });
                 },
                 isSelected: selectedField == field,
@@ -150,7 +162,7 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
             diceRoll.rerollsLeft == 0
                 ? 'Keine Neuversuche mehr übrig'
                 : (selectedDice.isEmpty
-                ? 'Wähle Würfel aus'
+                ? 'Wähle Würfel zum neu würfeln aus'
                 : 'Neu werfen'),
             style: TextStyle(
               fontSize: 18,
@@ -173,8 +185,10 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
     }
   }
 
-  void selectField(KniffelField field) {
-    selectedField = field;
+  void selectField(KniffelField field, KniffelGameState gameState) {
+    if (gameState.currentPlayer.scoreCard[field] == null) {
+      selectedField = field;
+    }
   }
 
   void selectDice(bool isSelected, int index) {
