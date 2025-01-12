@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../model/dice_roll.dart';
 import '../model/kniffel_field.dart';
 import '../state/play_state.dart';
+import 'dice_screen.dart';
 import 'kniffel_field_screen.dart';
 
 abstract class KniffelGameScreenBase<T extends StatefulWidget>
@@ -12,6 +13,7 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
   late DiceRoll diceRoll;
   final Set<int> selectedDice = {};
   KniffelField? selectedField;
+  bool markedForNewPlayer = false;
 
   String getTitle();
 
@@ -119,31 +121,35 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
   }
 
   Row buildDiceRow() {
+    bool tempMarkedForNewPlayer = markedForNewPlayer;
+    if (markedForNewPlayer) {
+      markedForNewPlayer = false;
+    }
+
     return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(diceRoll.dice.length, (index) {
-            final isSelected = selectedDice.contains(index);
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectDice(isSelected, index);
-                });
-              },
-              child: Container(
-                margin: EdgeInsets.all(8),
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: isSelected ? Colors.blue : Colors.grey,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  diceRoll.dice[index].toString(),
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                ),
-              ),
-            );
-          }),
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(diceRoll.dice.length, (index) {
+        final isSelected = selectedDice.contains(index);
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                selectDice(isSelected, index);
+              });
+            },
+            child: DiceScreen(
+              value: diceRoll.dice[index],
+              duration: Duration(milliseconds: 800),
+              isSelected: isSelected,
+              update: tempMarkedForNewPlayer,
+              rerolls: diceRoll.rerollsLeft,
+            ),
+          ),
         );
+      }),
+    );
   }
 
   ElevatedButton buildRerollButton() {
@@ -174,6 +180,10 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
             textAlign: TextAlign.center,
           ),
         );
+  }
+
+  void markForNewPlayer() {
+    markedForNewPlayer = true;
   }
 
   void checkGameOver(BuildContext context) {

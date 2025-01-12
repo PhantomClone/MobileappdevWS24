@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileappdev/edu/hm/mobileappdev/screen/dice_screen.dart';
 import 'dice_roll.dart';
 
 enum KniffelField {
@@ -203,33 +204,38 @@ extension KniffelFieldExtension on KniffelField {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(name),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(name),
+                if (roll != null)
+                  Text(
+                    'Punkte: $sum',
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+              ],
+            ),
             if (roll != null)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Punkte: $sum',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
                     SizedBox(height: 4),
                     Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
                       children: List.generate(roll.dice.length, (index) {
                         final die = roll.dice[index];
                         final isValid = _isValidDieForField(die, roll);
-                        return Container(
-                          margin: EdgeInsets.all(4),
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: isValid ? Colors.green : Colors.grey,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            die.toString(),
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
+                        return DiceScreen(
+                          value: die,
+                          duration: Duration(milliseconds: 800),
+                          isSelected: isValid,
+                          allowUpdates: false,
+                          fontSize: 20,
+                          boxSize: 40,
+                          selectedColor: Colors.green,
                         );
                       }),
                     ),
@@ -240,6 +246,7 @@ extension KniffelFieldExtension on KniffelField {
         ),
       ),
     );
+
   }
 
   bool _isValidDieForField(int die, DiceRoll roll) {

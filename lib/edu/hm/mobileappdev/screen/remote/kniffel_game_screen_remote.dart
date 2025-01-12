@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/model/dice_roll.dart';
 import 'package:provider/provider.dart';
 import '../../../../../generated/game.pb.dart' as game;
@@ -31,42 +32,50 @@ class _KniffelGameScreenRemoteState
 
     _subscription =
         client.listenForGameUpdates(gameState.gameId!).listen((serverState) {
-      setState(() {
-        gameState.setOnlineGameState(serverState);
-        gameState.setCurrentPlayer(Player(serverState.currentPlayer.playerName));
-        game.PlayerMove playerMove = serverState.moves.last;
+      gameState.setOnlineGameState(serverState);
+      gameState.setCurrentPlayer(Player(serverState.currentPlayer.playerName));
+      game.PlayerMove playerMove = serverState.moves.last;
 
-        Player player = gameState.players.firstWhere(
-            (player) => player.name == playerMove.player.playerName);
+      Player player = gameState.players
+          .firstWhere((player) => player.name == playerMove.player.playerName);
+
+      setState(() {
         diceRoll = DiceRoll();
         diceRoll.rerollsLeft = playerMove.rerollsLeft;
-        diceRoll.dice = playerMove.dice;
+        diceRoll.dice = List.of(playerMove.dice);
         if (playerMove.done != game.KniffelField.none) {
+          markForNewPlayer();
           player.scoreCard[mapKniffelField(playerMove.done)] = diceRoll;
         }
-
-        if (playerMove.done != game.KniffelField.none &&
-            _isAllowedToInteract(gameState)) {
-          Future.delayed(Duration(seconds: 5), () {
-            var diceRoll = DiceRoll();
-            client.sendMove(
-                gameState.gameId!,
-                serverState.currentPlayer.playerName,
-                diceRoll.dice,
-                diceRoll.rerollsLeft,
-                game.KniffelField.none);
-          }).ignore();
-          return;
-        }
+        print("Update UI");
+        print(diceRoll);
       });
+      if (playerMove.done != game.KniffelField.none &&
+          _isAllowedToInteract(gameState)) {
+        Future.delayed(Duration(seconds: 3), () {
+          var diceRoll = DiceRoll();
+          client.sendMove(
+              gameState.gameId!,
+              serverState.currentPlayer.playerName,
+              diceRoll.dice,
+              diceRoll.rerollsLeft,
+              game.KniffelField.none);
+        });
+        return;
+      }
     });
     super.initState();
   }
 
   @override
   void checkGameOver(BuildContext context) {
-    _subscription.cancel();
-    super.checkGameOver(context);
+    final gameState = Provider.of<KniffelGameState>(context, listen: false);
+    final isGameOver = gameState.players.every((player) =>
+        KniffelField.values.every((field) => player.scoreCard[field] != null));
+    if (isGameOver) {
+      _subscription.cancel();
+      context.go('/result');
+    }
   }
 
   @override
@@ -86,16 +95,14 @@ class _KniffelGameScreenRemoteState
 
   @override
   void rerollSelectedDice() {
+    markForNewPlayer();
     final gameState = Provider.of<KniffelGameState>(context, listen: false);
     if (_isAllowedToInteract(gameState)) {
-      setState(() {
-        final client =
-        Provider.of<KniffelServiceClient>(context, listen: false);
-        diceRoll.reroll(selectedDice.toList());
-        client.sendMove(gameState.gameId!, gameState.currentPlayer.name, diceRoll.dice,
-            diceRoll.rerollsLeft, game.KniffelField.none);
-        selectedDice.clear();
-      });
+      final client = Provider.of<KniffelServiceClient>(context, listen: false);
+      diceRoll.reroll(selectedDice.toList());
+      client.sendMove(gameState.gameId!, gameState.currentPlayer.name,
+          diceRoll.dice, diceRoll.rerollsLeft, game.KniffelField.none);
+      selectedDice.clear();
     }
   }
 
@@ -106,15 +113,14 @@ class _KniffelGameScreenRemoteState
       final currentPlayer = gameState.currentPlayer;
       final success = currentPlayer.setScore(selectedField!, diceRoll);
       if (success) {
-        setState(() {
-          final client =
-          Provider.of<KniffelServiceClient>(context, listen: false);
+        markForNewPlayer();
+        final client =
+            Provider.of<KniffelServiceClient>(context, listen: false);
 
-          client.sendMove(gameState.gameId!, currentPlayer.name, diceRoll.dice,
-              diceRoll.rerollsLeft, mapKniffelFieldB(selectedField!));
-          selectedDice.clear();
-          selectedField = null;
-        });
+        client.sendMove(gameState.gameId!, currentPlayer.name, diceRoll.dice,
+            diceRoll.rerollsLeft, mapKniffelFieldB(selectedField!));
+        selectedDice.clear();
+        selectedField = null;
         checkGameOver(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

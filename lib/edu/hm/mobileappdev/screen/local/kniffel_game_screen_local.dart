@@ -37,6 +37,7 @@ class _KniffelGameScreenLocalState
       final currentPlayer = gameState.currentPlayer;
       final success = currentPlayer.setScore(selectedField!, diceRoll);
       if (success) {
+        markForNewPlayer();
         setState(() {
           selectedDice.clear();
           selectedField = null;

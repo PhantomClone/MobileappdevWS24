@@ -17,8 +17,8 @@ class PlayerRepositoryImplementation implements PlayerRepository {
     );
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      return data['id'];
+      String id = response.body.replaceAll('"', '');
+      return id;
     } else {
       throw Exception(
           'Error while trying to add new player: ${response.body}');
