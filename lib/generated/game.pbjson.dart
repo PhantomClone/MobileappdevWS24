@@ -60,8 +60,9 @@ const PlayerMove$json = {
     {'1': 'player', '3': 1, '4': 1, '5': 11, '6': '.edu.hm.mobileappdev.proto.Player', '10': 'player'},
     {'1': 'gameId', '3': 2, '4': 1, '5': 9, '10': 'gameId'},
     {'1': 'dice', '3': 3, '4': 3, '5': 5, '10': 'dice'},
-    {'1': 'rerollsLeft', '3': 4, '4': 1, '5': 5, '10': 'rerollsLeft'},
-    {'1': 'done', '3': 5, '4': 1, '5': 14, '6': '.edu.hm.mobileappdev.proto.KniffelField', '10': 'done'},
+    {'1': 'selected_dice', '3': 4, '4': 3, '5': 5, '10': 'selectedDice'},
+    {'1': 'rerollsLeft', '3': 5, '4': 1, '5': 5, '10': 'rerollsLeft'},
+    {'1': 'done', '3': 6, '4': 1, '5': 14, '6': '.edu.hm.mobileappdev.proto.KniffelField', '10': 'done'},
   ],
 };
 
@@ -69,8 +70,9 @@ const PlayerMove$json = {
 final $typed_data.Uint8List playerMoveDescriptor = $convert.base64Decode(
     'CgpQbGF5ZXJNb3ZlEjkKBnBsYXllchgBIAEoCzIhLmVkdS5obS5tb2JpbGVhcHBkZXYucHJvdG'
     '8uUGxheWVyUgZwbGF5ZXISFgoGZ2FtZUlkGAIgASgJUgZnYW1lSWQSEgoEZGljZRgDIAMoBVIE'
-    'ZGljZRIgCgtyZXJvbGxzTGVmdBgEIAEoBVILcmVyb2xsc0xlZnQSOwoEZG9uZRgFIAEoDjInLm'
-    'VkdS5obS5tb2JpbGVhcHBkZXYucHJvdG8uS25pZmZlbEZpZWxkUgRkb25l');
+    'ZGljZRIjCg1zZWxlY3RlZF9kaWNlGAQgAygFUgxzZWxlY3RlZERpY2USIAoLcmVyb2xsc0xlZn'
+    'QYBSABKAVSC3Jlcm9sbHNMZWZ0EjsKBGRvbmUYBiABKA4yJy5lZHUuaG0ubW9iaWxlYXBwZGV2'
+    'LnByb3RvLktuaWZmZWxGaWVsZFIEZG9uZQ==');
 
 @$core.Deprecated('Use gameIdDescriptor instead')
 const GameId$json = {

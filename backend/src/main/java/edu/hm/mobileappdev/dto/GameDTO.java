@@ -43,12 +43,20 @@ public class GameDTO {
     if (!move.getPlayer().getPlayerName().equalsIgnoreCase(currentPlayer.getName())) {
       return;
     }
+
     moves.add(move);
+
+    if (moves.size() > 10) {
+      moves.remove(0);
+    }
+
     if (move.getDone() != KniffelField.none) {
       updateCurrentPlayer();
     }
+
     broadcastState();
   }
+
 
   private void updateCurrentPlayer() {
     int currentIndex = players.indexOf(currentPlayer);

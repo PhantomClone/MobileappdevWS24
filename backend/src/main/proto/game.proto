@@ -18,8 +18,9 @@ message PlayerMove {
   Player player = 1;
   string gameId = 2;
   repeated int32 dice = 3;
-  int32 rerollsLeft = 4;
-  KniffelField done = 5;
+  repeated int32 selected_dice = 4;
+  int32 rerollsLeft = 5;
+  KniffelField done = 6;
 }
 
 message GameId {

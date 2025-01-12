@@ -72,6 +72,7 @@ class PlayerMove extends $pb.GeneratedMessage {
     Player? player,
     $core.String? gameId,
     $core.Iterable<$core.int>? dice,
+    $core.Iterable<$core.int>? selectedDice,
     $core.int? rerollsLeft,
     KniffelField? done,
   }) {
@@ -84,6 +85,9 @@ class PlayerMove extends $pb.GeneratedMessage {
     }
     if (dice != null) {
       $result.dice.addAll(dice);
+    }
+    if (selectedDice != null) {
+      $result.selectedDice.addAll(selectedDice);
     }
     if (rerollsLeft != null) {
       $result.rerollsLeft = rerollsLeft;
@@ -101,8 +105,9 @@ class PlayerMove extends $pb.GeneratedMessage {
     ..aOM<Player>(1, _omitFieldNames ? '' : 'player', subBuilder: Player.create)
     ..aOS(2, _omitFieldNames ? '' : 'gameId', protoName: 'gameId')
     ..p<$core.int>(3, _omitFieldNames ? '' : 'dice', $pb.PbFieldType.K3)
-    ..a<$core.int>(4, _omitFieldNames ? '' : 'rerollsLeft', $pb.PbFieldType.O3, protoName: 'rerollsLeft')
-    ..e<KniffelField>(5, _omitFieldNames ? '' : 'done', $pb.PbFieldType.OE, defaultOrMaker: KniffelField.none, valueOf: KniffelField.valueOf, enumValues: KniffelField.values)
+    ..p<$core.int>(4, _omitFieldNames ? '' : 'selectedDice', $pb.PbFieldType.K3)
+    ..a<$core.int>(5, _omitFieldNames ? '' : 'rerollsLeft', $pb.PbFieldType.O3, protoName: 'rerollsLeft')
+    ..e<KniffelField>(6, _omitFieldNames ? '' : 'done', $pb.PbFieldType.OE, defaultOrMaker: KniffelField.none, valueOf: KniffelField.valueOf, enumValues: KniffelField.values)
     ..hasRequiredFields = false
   ;
 
@@ -151,22 +156,25 @@ class PlayerMove extends $pb.GeneratedMessage {
   $core.List<$core.int> get dice => $_getList(2);
 
   @$pb.TagNumber(4)
-  $core.int get rerollsLeft => $_getIZ(3);
-  @$pb.TagNumber(4)
-  set rerollsLeft($core.int v) { $_setSignedInt32(3, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasRerollsLeft() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearRerollsLeft() => clearField(4);
+  $core.List<$core.int> get selectedDice => $_getList(3);
 
   @$pb.TagNumber(5)
-  KniffelField get done => $_getN(4);
+  $core.int get rerollsLeft => $_getIZ(4);
   @$pb.TagNumber(5)
-  set done(KniffelField v) { setField(5, v); }
+  set rerollsLeft($core.int v) { $_setSignedInt32(4, v); }
   @$pb.TagNumber(5)
-  $core.bool hasDone() => $_has(4);
+  $core.bool hasRerollsLeft() => $_has(4);
   @$pb.TagNumber(5)
-  void clearDone() => clearField(5);
+  void clearRerollsLeft() => clearField(5);
+
+  @$pb.TagNumber(6)
+  KniffelField get done => $_getN(5);
+  @$pb.TagNumber(6)
+  set done(KniffelField v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasDone() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearDone() => clearField(6);
 }
 
 class GameId extends $pb.GeneratedMessage {

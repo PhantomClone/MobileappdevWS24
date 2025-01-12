@@ -43,12 +43,12 @@ class _KniffelGameScreenRemoteState
         diceRoll = DiceRoll();
         diceRoll.rerollsLeft = playerMove.rerollsLeft;
         diceRoll.dice = List.of(playerMove.dice);
+        selectedDice.clear();
+        selectedDice.addAll(playerMove.selectedDice);
         if (playerMove.done != game.KniffelField.none) {
           markForNewPlayer();
           player.scoreCard[mapKniffelField(playerMove.done)] = diceRoll;
         }
-        print("Update UI");
-        print(diceRoll);
       });
       if (playerMove.done != game.KniffelField.none &&
           _isAllowedToInteract(gameState)) {
@@ -58,6 +58,7 @@ class _KniffelGameScreenRemoteState
               gameState.gameId!,
               serverState.currentPlayer.playerName,
               diceRoll.dice,
+              List.of(selectedDice),
               diceRoll.rerollsLeft,
               game.KniffelField.none);
         });
@@ -83,6 +84,14 @@ class _KniffelGameScreenRemoteState
     final gameState = Provider.of<KniffelGameState>(context, listen: false);
     if (_isAllowedToInteract(gameState)) {
       super.selectDice(isSelected, index);
+      final client = Provider.of<KniffelServiceClient>(context, listen: false);
+      client.sendMove(
+          gameState.gameId!,
+          gameState.currentPlayer.name,
+          diceRoll.dice,
+          List.of(selectedDice),
+          diceRoll.rerollsLeft,
+          game.KniffelField.none);
     }
   }
 
@@ -100,8 +109,13 @@ class _KniffelGameScreenRemoteState
     if (_isAllowedToInteract(gameState)) {
       final client = Provider.of<KniffelServiceClient>(context, listen: false);
       diceRoll.reroll(selectedDice.toList());
-      client.sendMove(gameState.gameId!, gameState.currentPlayer.name,
-          diceRoll.dice, diceRoll.rerollsLeft, game.KniffelField.none);
+      client.sendMove(
+          gameState.gameId!,
+          gameState.currentPlayer.name,
+          diceRoll.dice,
+          List.of(selectedDice),
+          diceRoll.rerollsLeft,
+          game.KniffelField.none);
       selectedDice.clear();
     }
   }
@@ -117,8 +131,13 @@ class _KniffelGameScreenRemoteState
         final client =
             Provider.of<KniffelServiceClient>(context, listen: false);
 
-        client.sendMove(gameState.gameId!, currentPlayer.name, diceRoll.dice,
-            diceRoll.rerollsLeft, mapKniffelFieldB(selectedField!));
+        client.sendMove(
+            gameState.gameId!,
+            currentPlayer.name,
+            diceRoll.dice,
+            List.of(selectedDice),
+            diceRoll.rerollsLeft,
+            mapKniffelFieldB(selectedField!));
         selectedDice.clear();
         selectedField = null;
         checkGameOver(context);
