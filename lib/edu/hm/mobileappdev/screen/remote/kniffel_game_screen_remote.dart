@@ -58,7 +58,7 @@ class _KniffelGameScreenRemoteState
               gameState.gameId!,
               serverState.currentPlayer.playerName,
               diceRoll.dice,
-              List.of(selectedDice),
+              List.empty(),
               diceRoll.rerollsLeft,
               game.KniffelField.none);
         });
