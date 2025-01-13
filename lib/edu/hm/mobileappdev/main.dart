@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/online/client.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/repository/player_repository.dart';
@@ -14,6 +15,8 @@ import 'package:mobileappdev/edu/hm/mobileappdev/state/play_state.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   runApp(MultiProvider(
     providers: [
       Provider<KniffelGameState>(
@@ -28,9 +31,6 @@ void main() {
 
 KniffelGameState _createKniffelGameState() {
   KniffelGameState gameState = KniffelGameState();
-
-  //gameState.addPlayer(Player("Max"));
-  //gameState.addPlayer(Player("Musterman"));
 
   return gameState;
 }
