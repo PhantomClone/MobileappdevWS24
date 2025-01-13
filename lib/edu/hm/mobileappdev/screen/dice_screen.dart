@@ -33,7 +33,6 @@ class DiceScreen extends StatefulWidget {
 class _DiceScreenState extends State<DiceScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Animation<int> _numberAnimation;
   late int _currentValue;
 
   @override
@@ -47,18 +46,18 @@ class _DiceScreenState extends State<DiceScreen>
       duration: widget.duration,
     );
 
-    _numberAnimation = IntTween(begin: 1, end: 6).animate(
+    IntTween(begin: 1, end: 6).animate(
       CurvedAnimation(parent: _controller, curve: Curves.linear),
-    )..addListener(() {
+    ).addListener(() {
       setState(() {
-        _currentValue = Random().nextInt(6) + 1; // Simuliert das Durchlaufen
+        _currentValue = Random().nextInt(6) + 1;
       });
     });
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         setState(() {
-          _currentValue = widget.value; // Am Ende die endgültige Zahl
+          _currentValue = widget.value;
         });
       }
     });

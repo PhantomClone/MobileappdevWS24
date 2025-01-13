@@ -39,11 +39,12 @@ class _KniffelGameScreenRemoteState
       Player player = gameState.players
           .firstWhere((player) => player.name == playerMove.player.playerName);
 
+      diceRoll.rerollsLeft = playerMove.rerollsLeft;
+      diceRoll.dice = List.of(playerMove.dice);
       setState(() {
-        diceRoll = DiceRoll();
-        diceRoll.rerollsLeft = playerMove.rerollsLeft;
-        diceRoll.dice = List.of(playerMove.dice);
-        selectedDice.clear();
+        selectedDice.removeWhere((i) => !playerMove.selectedDice.contains(i));
+        playerMove.selectedDice.where((i) => !selectedDice.contains(i))
+            .forEach((i) => selectedDice.add(i));
         selectedDice.addAll(playerMove.selectedDice);
         if (playerMove.done != game.KniffelField.none) {
           markForNewPlayer();
@@ -104,7 +105,6 @@ class _KniffelGameScreenRemoteState
 
   @override
   void rerollSelectedDice() {
-    markForNewPlayer();
     final gameState = Provider.of<KniffelGameState>(context, listen: false);
     if (_isAllowedToInteract(gameState)) {
       final client = Provider.of<KniffelServiceClient>(context, listen: false);
@@ -113,7 +113,7 @@ class _KniffelGameScreenRemoteState
           gameState.gameId!,
           gameState.currentPlayer.name,
           diceRoll.dice,
-          List.of(selectedDice),
+          List.empty(),
           diceRoll.rerollsLeft,
           game.KniffelField.none);
       selectedDice.clear();
@@ -127,7 +127,6 @@ class _KniffelGameScreenRemoteState
       final currentPlayer = gameState.currentPlayer;
       final success = currentPlayer.setScore(selectedField!, diceRoll);
       if (success) {
-        markForNewPlayer();
         final client =
             Provider.of<KniffelServiceClient>(context, listen: false);
 
@@ -135,7 +134,7 @@ class _KniffelGameScreenRemoteState
             gameState.gameId!,
             currentPlayer.name,
             diceRoll.dice,
-            List.of(selectedDice),
+            List.empty(),
             diceRoll.rerollsLeft,
             mapKniffelFieldB(selectedField!));
         selectedDice.clear();
