@@ -35,14 +35,28 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            'Aktueller Spieler: ${currentPlayer.name}',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+          RichText(
             textAlign: TextAlign.center,
+            text: TextSpan(
+              style: TextStyle(
+                fontSize: 24,
+                color: Colors.black87,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                  text: 'Spieler ',
+                  style: TextStyle(fontWeight: FontWeight.normal),
+                ),
+                TextSpan(
+                  text: currentPlayer.name,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                TextSpan(
+                  text: ' ist an der Reihe',
+                  style: TextStyle(fontWeight: FontWeight.normal),
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 16),
           Text(

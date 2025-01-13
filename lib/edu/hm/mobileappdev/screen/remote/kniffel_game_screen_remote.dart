@@ -32,23 +32,30 @@ class _KniffelGameScreenRemoteState
 
     _subscription =
         client.listenForGameUpdates(gameState.gameId!).listen((serverState) {
+          final lastStatePlayerMove = gameState.currentOnlineGameState.moves.lastOrNull;
+
       gameState.setOnlineGameState(serverState);
-      gameState.setCurrentPlayer(Player(serverState.currentPlayer.playerName));
       game.PlayerMove playerMove = serverState.moves.last;
 
       Player player = gameState.players
           .firstWhere((player) => player.name == playerMove.player.playerName);
 
-      diceRoll.rerollsLeft = playerMove.rerollsLeft;
-      diceRoll.dice = List.of(playerMove.dice);
       setState(() {
+        diceRoll = DiceRoll();
+        diceRoll.rerollsLeft = playerMove.rerollsLeft;
+        diceRoll.dice = List.of(playerMove.dice);
         selectedDice.removeWhere((i) => !playerMove.selectedDice.contains(i));
         playerMove.selectedDice.where((i) => !selectedDice.contains(i))
             .forEach((i) => selectedDice.add(i));
         selectedDice.addAll(playerMove.selectedDice);
         if (playerMove.done != game.KniffelField.none) {
-          markForNewPlayer();
           player.scoreCard[mapKniffelField(playerMove.done)] = diceRoll;
+        }
+        if (lastStatePlayerMove != null &&
+            lastStatePlayerMove.done != game.KniffelField.none &&
+            playerMove.done == game.KniffelField.none) {
+          markForNewPlayer();
+          gameState.setCurrentPlayer(Player(serverState.currentPlayer.playerName));
         }
       });
       if (playerMove.done != game.KniffelField.none &&
@@ -66,6 +73,17 @@ class _KniffelGameScreenRemoteState
         return;
       }
     });
+
+    if (_isAllowedToInteract(gameState)) {
+      client.sendMove(
+          gameState.gameId!,
+          gameState.currentPlayer.name,
+          diceRoll.dice,
+          List.empty(),
+          diceRoll.rerollsLeft,
+          game.KniffelField.none);
+    }
+
     super.initState();
   }
 

@@ -17,10 +17,8 @@ class OnlineWaitForPlayersScreen extends StatefulWidget {
 }
 
 class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen> {
-
   game.GameState gameState = game.GameState(gameStarted: false);
-
-  late StreamSubscription<game.GameState> _subscription;
+  StreamSubscription<game.GameState>? _subscription;
 
   @override
   void initState() {
@@ -39,9 +37,8 @@ class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen>
 
     if (gameState.gameId != null) {
       _subscription = client.listenForGameUpdates(gameState.gameId!).listen((serverState) {
-        if (!mounted) {
-          return;
-        }
+        if (!mounted) return;
+
         gameState.setOnlineGameState(serverState);
         setState(() {
           if (!serverState.gameStarted) {
@@ -52,7 +49,7 @@ class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen>
           } else if (!this.gameState.gameStarted) {
             gameState.setPlayers(serverState.players.map((player) => Player(player.playerName)));
             gameState.setCurrentPlayer(Player(serverState.currentPlayer.playerName));
-            _subscription.cancel();
+            _subscription?.cancel();
             context.go('/play_online');
           }
           this.gameState = serverState;
@@ -62,48 +59,74 @@ class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Game ID: ${gameState.gameId ?? 'Loading...'}'),
+        title: Text('Game ID: ${gameState.gameId ?? 'Lade...'}'),
         backgroundColor: Colors.teal,
+        centerTitle: true,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (gameState.gameId != null) ...[
-            SizedBox(height: 16),
-            Text(
-              'Waiting for players...',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Players:',
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: gameState.players.length,
-                itemBuilder: (context, index) {
-                  final player = gameState.players[index];
-                  return ListTile(
-                    title: Text(player.name),
-                  );
-                },
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (gameState.gameId != null) ...[
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Warten auf Spieler...',
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'Spieler:',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 16),
+                      SizedBox(
+                        height: 200,
+                        child: ListView.builder(
+                          itemCount: gameState.players.length,
+                          itemBuilder: (context, index) {
+                            final player = gameState.players[index];
+                            return ListTile(
+                              title: Text(player.name),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
+            ] else ...[
+              CircularProgressIndicator(),
+            ],
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: gameState.players.isNotEmpty
+                  ? () {
+                client.startGame(gameState.gameId!);
+              }
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text('Spiel starten', style: TextStyle(fontSize: 16)),
             ),
-          ] else ...[
-            CircularProgressIndicator(),
           ],
-          SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: gameState.players.isNotEmpty
-                ? () {
-              client.startGame(gameState.gameId!);
-            }
-                : null,
-            child: Text('Start Game'),
-          ),
-        ],
+        ),
       ),
     );
   }
