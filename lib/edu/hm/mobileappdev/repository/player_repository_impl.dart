@@ -27,11 +27,10 @@ class PlayerRepositoryImplementation implements PlayerRepository {
   
   @override
   Future<void> addPlayerScore(String id, int score) async {
-    final uri = Uri.parse('$apiUrl/players/$id/score');
+    final uri = Uri.parse('$apiUrl/players/$id/score?score=$score');
     final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'score': score})
     );
 
     if (response.statusCode != 204) {
@@ -40,6 +39,7 @@ class PlayerRepositoryImplementation implements PlayerRepository {
     }
   }
 
+  @override
   Future<List<PlayerDTO>> getPlayersRanking({int limit = 10}) async {
     final uri = Uri.parse('$apiUrl/players/ranking?limit=$limit');
     final response = await http.get(

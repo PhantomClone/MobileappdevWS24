@@ -1,5 +1,5 @@
 class PlayerDTO {
-  final String id;
+  final int id;
   final String name;
   final int score;
 
@@ -12,8 +12,8 @@ class PlayerDTO {
   factory PlayerDTO.fromJson(Map<String, dynamic> json) {
     return PlayerDTO(
       id: json['id'],
-      name: json['name'],
-      score: json['score'],
+      name: json['player']['name'],
+      score: json['value'],
     );
   }
 }

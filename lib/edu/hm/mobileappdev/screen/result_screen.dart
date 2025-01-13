@@ -45,7 +45,6 @@ class _ResultScreenState extends State<ResultScreen> {
     }
   }
 
-
   int calculatePlayerScore(Map<KniffelField, DiceRoll?> scoreCard) {
     int sumUpperFields = 0;
     int totalScore = 0;
@@ -88,8 +87,8 @@ class _ResultScreenState extends State<ResultScreen> {
 
     final scores = players.map((player) {
       final totalScore = calculatePlayerScore(player.scoreCard);
-      _savePlayerScore(player, totalScore);
       final bonus = calculatePlayerScoreBonus(player.scoreCard);
+      _savePlayerScore(player, totalScore + bonus);
       return {
         'player': player.name,
         'score': totalScore,
