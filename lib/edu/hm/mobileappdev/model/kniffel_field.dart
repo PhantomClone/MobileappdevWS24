@@ -199,19 +199,23 @@ extension KniffelFieldExtension on KniffelField {
     return Card(
       elevation: 3,
       margin: EdgeInsets.symmetric(vertical: 4),
+      color: Colors.grey[800],
       child: ListTile(
-        leading: Icon(icon, color: Colors.blue),
+        leading: Icon(icon, color: Colors.amber[100]),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(name),
+                Text(
+                  name,
+                  style: const TextStyle(fontSize: 20, color: Color(0xFFFFE3CB)),
+                ),
                 if (roll != null)
                   Text(
                     'Punkte: $sum',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    style: TextStyle(fontSize: 16, color: Color(0xFFFFE3CB)),
                   ),
               ],
             ),
@@ -235,7 +239,7 @@ extension KniffelFieldExtension on KniffelField {
                           allowUpdates: false,
                           fontSize: 20,
                           boxSize: 40,
-                          selectedColor: Colors.green,
+                          selectedColor: Colors.amber.shade100,
                         );
                       }),
                     ),
@@ -246,7 +250,6 @@ extension KniffelFieldExtension on KniffelField {
         ),
       ),
     );
-
   }
 
   bool _isValidDieForField(int die, DiceRoll roll) {
