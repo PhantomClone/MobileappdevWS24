@@ -22,7 +22,7 @@ class DiceScreen extends StatefulWidget {
     this.allowUpdates = true,
     this.fontSize = 24,
     this.boxSize = 60,
-    this.selectedColor = Colors.blue,
+    this.selectedColor = Colors.amber,
     super.key,
   });
 
@@ -91,7 +91,7 @@ class _DiceScreenState extends State<DiceScreen>
       width: widget.boxSize,
       height: widget.boxSize,
       decoration: BoxDecoration(
-        color: widget.isSelected ? widget.selectedColor : Colors.white,
+        color: widget.isSelected ? Colors.amber[100] : Colors.white,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(color: Colors.black26, blurRadius: 5),
@@ -103,7 +103,7 @@ class _DiceScreenState extends State<DiceScreen>
         style: TextStyle(
           fontSize: widget.fontSize,
           fontWeight: FontWeight.bold,
-          color: widget.isSelected ? Colors.white : Colors.black,
+          color: Colors.grey[800],
         ),
       ),
     );
