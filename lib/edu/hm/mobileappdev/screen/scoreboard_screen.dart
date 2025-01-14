@@ -66,6 +66,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                     ),
                   ],
                 ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
 
