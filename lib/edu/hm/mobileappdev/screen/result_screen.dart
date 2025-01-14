@@ -15,7 +15,6 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
-
   Future<void> _savePlayerScore(Player player, int totalScore, {int retries = 5}) async {
     final playerRepository = PlayerRepositoryImplementation();
 
@@ -24,16 +23,16 @@ class _ResultScreenState extends State<ResultScreen> {
 
       await playerRepository.addPlayerScore(playerId, totalScore);
 
+      /*
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Player score erfolgreich gespeichert")),
         );
       }
+       */
     } catch (e) {
       if (retries > 0) {
-
         await Future.delayed(Duration(seconds: 2));
-
         await _savePlayerScore(player, totalScore, retries: retries - 1);
       } else {
         if (mounted) {
@@ -99,14 +98,49 @@ class _ResultScreenState extends State<ResultScreen> {
     scores.sort((a, b) => (b['score']! as int) - (a['score'] as int));
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ergebnisse'),
-        centerTitle: true,
-        backgroundColor: Colors.teal,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _buildResultList(scores),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/background/dice_background.jpg'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.3),
+              BlendMode.darken,
+            ),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 40),
+              Text(
+                'Das Spiel ist beendet!',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber[100],
+                  shadows: [
+                    Shadow(
+                      blurRadius: 10.0,
+                      color: Colors.black.withOpacity(0.5),
+                      offset: Offset(3.0, 3.0),
+                    ),
+                  ],
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: _buildResultList(scores),
+                ),
+              ),
+              _buildBottomButtons(),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -115,67 +149,90 @@ class _ResultScreenState extends State<ResultScreen> {
     return Center(
       child: Card(
         elevation: 4,
+        color: Color.fromRGBO(70, 70, 70, 0.8),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Spiel ist beendet!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                "Platzierungen:",
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.amber[100]),
               ),
               const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: scores.length,
-                itemBuilder: (context, index) {
-                  final result = scores[index];
-                  final bonusAchieved = result['bonus'] != 0;
-
-                  return Card(
-                    elevation: 4,
-                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.teal,
-                        child: Text(
-                          '${index + 1}',
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: scores.length,
+                  itemBuilder: (context, index) {
+                    final result = scores[index];
+                    final bonusAchieved = result['bonus'] != 0;
+                    return Card(
+                      elevation: 4,
+                      margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
+                      color: Colors.grey[900],
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: index == 0
+                              ? Colors.amber
+                              : index == 1
+                              ? Colors.grey
+                              : index == 2
+                              ? Colors.deepOrangeAccent
+                              : Colors.black,
+                          child: Text(
+                            '${index + 1}',
+                            style: TextStyle(color: Color(0xFFFFF8E1), fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      title: Text(
-                        '${result['player']}',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Punkte: ${result['score']}',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            'Bonus: ${bonusAchieved ? '✔ Erhalten' : '✘ Nicht erreicht'}',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: bonusAchieved ? Colors.green : Colors.red,
-                              fontWeight: FontWeight.w600,
+                        title: Text(
+                          '${result['player']}',
+                          style: TextStyle(color: Color(0xFFFFF8E1), fontSize: 22, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Punkte: ${result['score']}',
+                              style: TextStyle(fontSize: 16, color: Color(0xFFFFF8E1), fontWeight: FontWeight.w500),
                             ),
-                          ),
-                        ],
+                            SizedBox(height: 4),
+                            Text(
+                              'Bonus: ${bonusAchieved ? '✔ erhalten' : '✘ erhalten'}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: bonusAchieved ? Colors.green : Colors.red,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        trailing: index == 0
+                            ? Icon(
+                          Icons.emoji_events,
+                          color: Colors.amber,
+                          size: 30,
+                        )
+                            : null,
                       ),
-                    ),
-                  );
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 10),
+              _buildButton(
+                icon: Icons.refresh,
+                label: 'Noch eine Runde',
+                color: Colors.grey.shade900,
+                onPressed: () {
+                  final gameState = Provider.of<KniffelGameState>(context, listen: false);
+                  gameState.resetPlayersToStart(gameState.players);
+                  context.go('/play');
                 },
               ),
-            ),
-            const SizedBox(height: 16),
-              _buildActionButtons(),
             ],
           ),
         ),
@@ -183,35 +240,28 @@ class _ResultScreenState extends State<ResultScreen> {
     );
   }
 
-  Widget _buildActionButtons() {
-    return Column(
-      children: [
-        const SizedBox(height: 16),
-        _buildButton(
-          icon: Icons.refresh,
-          label: 'Noch eine Runde',
-          color: Colors.teal,
-          onPressed: () {
-            final gameState = Provider.of<KniffelGameState>(context, listen: false);
-            gameState.resetPlayersToStart(gameState.players);
-            context.go('/play');
-          },
-        ),
-        const SizedBox(height: 16),
-        _buildButton(
-          icon: Icons.home,
-          label: 'Zurück zur Startseite',
-          color: Colors.blue,
-          onPressed: () => context.go('/'),
-        ),
-        const SizedBox(height: 16),
-        _buildButton(
-          icon: Icons.score,
-          label: 'Zur Rangliste',
-          color: Colors.orange,
-          onPressed: () => context.go('/score'),
-        ),
-      ],
+  Widget _buildBottomButtons() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          _buildButton(
+            icon: Icons.score,
+            label: 'Zur Rangliste',
+            color: Colors.amber.shade100,
+            textColor: Colors.grey.shade800,
+            onPressed: () => context.go('/score'),
+          ),
+          const SizedBox(height: 16),
+          _buildButton(
+            icon: Icons.home,
+            label: 'Zurück zur Startseite',
+            color: Colors.amber.shade100,
+            textColor: Colors.grey.shade800,
+            onPressed: () => context.go('/'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -220,11 +270,12 @@ class _ResultScreenState extends State<ResultScreen> {
     required String label,
     required Color color,
     required VoidCallback onPressed,
+    Color? textColor = Colors.white,
   }) {
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
-        foregroundColor: Colors.white,
+        foregroundColor: textColor,
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
@@ -234,7 +285,7 @@ class _ResultScreenState extends State<ResultScreen> {
       icon: Icon(icon, size: 20),
       label: Text(
         label,
-        style: const TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 20),
       ),
     );
   }
