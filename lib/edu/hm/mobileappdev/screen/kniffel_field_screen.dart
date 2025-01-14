@@ -21,15 +21,15 @@ class KniffelFieldScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4),
-        padding: EdgeInsets.all(12),
+        margin: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+        padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue : Colors.grey.shade200,
-          border: Border.all(color: Colors.black),
-          borderRadius: BorderRadius.circular(8),
+          color: isSelected ? Colors.amber.shade100 : Colors.grey.shade800,
+          borderRadius: BorderRadius.circular(16), // Abgerundete Ecken
         ),
-        child: field.buildWidget(context, diceRoll),
+        child: field.buildWidget(context, diceRoll), // Der Inhalt bleibt unverändert
       ),
     );
   }
+
 }
