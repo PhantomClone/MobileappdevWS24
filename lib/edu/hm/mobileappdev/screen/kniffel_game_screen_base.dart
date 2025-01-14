@@ -35,6 +35,7 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(height: 16),
           RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
@@ -100,7 +101,7 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
 
   String _textForSelectedFieldButton(KniffelGameState gameState) {
     if (selectedField == null) {
-      return 'Wähle ein Feld um die Würfel zu setzten';
+      return 'Wähle ein Feld um die Würfel zu setzen';
     }
 
     if (gameState.currentPlayer.scoreCard[selectedField] != null) {
