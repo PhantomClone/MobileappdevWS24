@@ -23,7 +23,7 @@ void showConfirmationDialog(BuildContext context) {
             child: Text(
               'Abbrechen',
               style: TextStyle(
-                color: Colors.amber[100], // Amber Textfarbe
+                color: Colors.amber[100],
                 fontSize: 18,
               ),
             ),
@@ -34,11 +34,11 @@ void showConfirmationDialog(BuildContext context) {
               context.go('/');
             },
             style: TextButton.styleFrom(
-              backgroundColor: Colors.amber[100], // Hintergrundfarbe für den Button
-              foregroundColor: Colors.grey[900],   // Textfarbe für den Button
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24), // Padding für den Button
+              backgroundColor: Colors.amber[100],
+              foregroundColor: Colors.grey[900],
+              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8), // Abgerundete Ecken
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
             child: Text(

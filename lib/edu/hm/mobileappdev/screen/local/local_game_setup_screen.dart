@@ -15,14 +15,17 @@ class LocalGameSetupScreen extends StatefulWidget {
 
 class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
   final List<TextEditingController> _playerControllers = [TextEditingController()];
+  final List<FocusNode> _focusNodes = [FocusNode()];
   String? _errorMessage;
 
   void _addPlayerField() {
     if (_playerControllers.every((controller) => controller.text.isNotEmpty) && _playerControllers.length < 4) {
       setState(() {
         _playerControllers.add(TextEditingController());
+        _focusNodes.add(FocusNode());
         _errorMessage = null;
       });
+      FocusScope.of(context).requestFocus(_focusNodes.last);
     } else {
       setState(() {
         _errorMessage = 'Bitte gib zuerst alle anderen Namen ein.';
@@ -33,6 +36,7 @@ class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
   void _removePlayerField(int index) {
     setState(() {
       _playerControllers.removeAt(index);
+      _focusNodes.removeAt(index);
     });
   }
 
@@ -57,6 +61,9 @@ class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
   void dispose() {
     for (final controller in _playerControllers) {
       controller.dispose();
+    }
+    for (final focusNode in _focusNodes) {
+      focusNode.dispose();
     }
     super.dispose();
   }
@@ -93,7 +100,7 @@ class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 156),
+              const SizedBox(height: 100),
 
               _buildPlayerSelection(),
 
@@ -123,7 +130,7 @@ class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
     return Center(
       child: Card(
         elevation: 10,
-        color: Color.fromRGBO(70, 70, 70, 0.7), // Graue Card mit 70% Transparenz
+        color: Color.fromRGBO(70, 70, 70, 0.7),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -149,7 +156,8 @@ class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
                       Expanded(
                         child: TextField(
                           controller: controller,
-                          style: const TextStyle(color: Color(0xFFFFECB3), fontSize: 20), // Textfarbe auf weiß ändern
+                          focusNode: _focusNodes[index],
+                          style: const TextStyle(color: Color(0xFFFFECB3), fontSize: 20),
                           decoration: InputDecoration(
                             labelText: 'Spieler #${index + 1}',
                             labelStyle: const TextStyle(color: Color(0xFFFFECB3), fontSize: 18),
@@ -184,6 +192,7 @@ class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
                   label: "Zusätzlichen Spieler hinzufügen",
                   color: Color(0xFF212121),
                   onPressed: _addPlayerField,
+                  textColor: Colors.white,
                 ),
             ],
           ),
@@ -212,7 +221,7 @@ class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
       icon: icon != null ? Icon(icon, size: 20) : null,
       label: Text(
         label,
-        style: const TextStyle(fontSize: 20),
+        style: const TextStyle(fontSize: 19),
       ),
     );
   }
