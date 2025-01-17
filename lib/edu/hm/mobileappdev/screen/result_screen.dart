@@ -201,7 +201,7 @@ class _ResultScreenState extends State<ResultScreen> {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              'Bonus: ${bonusAchieved ? '✔ erhalten' : '✘ erhalten'}',
+                              'Bonus: ${bonusAchieved ? '✔ (+ 35 P.)' : '✘'}',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: bonusAchieved ? Colors.green : Colors.red,
