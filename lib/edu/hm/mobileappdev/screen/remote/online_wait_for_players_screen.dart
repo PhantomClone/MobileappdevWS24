@@ -189,7 +189,8 @@ class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen>
                 child: Text('Spiel starten', style: TextStyle(fontSize: 20, color: Colors.grey[900])),
               ),
               const SizedBox(height: 8),
-              ElevatedButton(
+              ElevatedButton.icon(
+                icon: Icon(Icons.arrow_back, size: 20,),
                 onPressed: () => context.go('/'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber[100],
@@ -198,7 +199,7 @@ class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen>
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text('Zurück', style: TextStyle(fontSize: 20, color: Colors.grey[900])),
+                label: Text('Zurück', style: TextStyle(fontSize: 20, color: Colors.grey[900])),
               ),
             ],
           ),

@@ -40,21 +40,48 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
           child: Column(
             children: [
               const SizedBox(height: 16),
-              Text(
-                getTitle(),
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.amber[100], // Amber Farbe für den Titel
-                  shadows: [
-                    Shadow(
-                      blurRadius: 10.0,
-                      color: Colors.black.withOpacity(0.5),
-                      offset: Offset(3.0, 3.0),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_rounded, // Zurück-Pfeil-Icon
+                      color: Colors.amber[100],
+                      size: 40,
                     ),
-                  ],
-                ),
-                textAlign: TextAlign.center,
+                    onPressed: () {
+                      final gameState = Provider.of<KniffelGameState>(context, listen: false);
+
+                      // Navigiere je nach Modus
+                      if (gameState.gameId == null) {
+                        // Im Offline-Modus, wenn kein gameId existiert
+                        context.go('/localGameSetup');
+                      } else {
+                        // Im Online-Modus, wenn gameId existiert
+                        context.go('/wait_for_players');
+                      }
+                    },
+                    splashColor: Colors.transparent, // Verhindert den Farbüberlauf bei Klick
+                  ),
+
+                  Expanded( // Verhindert, dass der Abstand zu groß wird
+                    child: Text(
+                      getTitle(),
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber[100], // Amber Farbe für den Titel
+                        shadows: [
+                          Shadow(
+                            blurRadius: 10.0,
+                            color: Colors.black.withOpacity(0.5),
+                            offset: Offset(3.0, 3.0),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
 
@@ -219,20 +246,20 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
           ? rerollSelectedDice
           : null,
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        backgroundColor: diceRoll.rerollsLeft > 0 && selectedDice.isNotEmpty
-            ? Colors.amber[100]
-            : Colors.grey
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          backgroundColor: diceRoll.rerollsLeft > 0 && selectedDice.isNotEmpty
+              ? Colors.amber[100]
+              : Colors.grey
       ),
       child: Text(
         diceRoll.rerollsLeft == 0
             ? 'Keine Neuversuche mehr übrig'
             : (selectedDice.isEmpty
-              ? 'Wähle Würfel zum neu würfeln aus'
-              : 'Neu werfen'),
+            ? 'Wähle Würfel zum neu würfeln aus'
+            : 'Neu werfen'),
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w500,
