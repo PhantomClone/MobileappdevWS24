@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../model/player.dart';
 import '../../online/client.dart';
 import '../../state/play_state.dart';
+import '../dialog/confim_back.dart';
 
 class OnlineWaitForPlayersScreen extends StatefulWidget {
   const OnlineWaitForPlayersScreen({super.key});
@@ -95,7 +96,7 @@ class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen>
               ),
               const SizedBox(height: 16),
               Transform.rotate(
-                angle: -0.1, // Winkel in Bogenmaß (hier leicht nach links kippen)
+                angle: -0.1,
                 child: Text(
                   'Teile sie mit deinen Freunden!',
                   style: TextStyle(
@@ -106,7 +107,6 @@ class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen>
                 ),
               ),
               const SizedBox(height: 16),
-              // Inhalt, der die Spieler anzeigt oder den Ladeindikator
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -191,7 +191,7 @@ class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen>
               const SizedBox(height: 8),
               ElevatedButton.icon(
                 icon: Icon(Icons.arrow_back, size: 20,),
-                onPressed: () => context.go('/'),
+                onPressed: () => showConfirmationDialog(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber[100],
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),

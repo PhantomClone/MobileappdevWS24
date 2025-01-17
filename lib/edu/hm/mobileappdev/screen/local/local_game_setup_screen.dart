@@ -4,6 +4,8 @@ import 'package:mobileappdev/edu/hm/mobileappdev/state/play_state.dart';
 import 'package:mobileappdev/edu/hm/mobileappdev/model/player.dart';
 import 'package:go_router/go_router.dart';
 
+import '../dialog/confim_back.dart';
+
 class LocalGameSetupScreen extends StatefulWidget {
   const LocalGameSetupScreen({super.key});
 
@@ -107,7 +109,7 @@ class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
                 icon: Icons.arrow_back,
                 label: 'Zurück',
                 color: Color(0xFFFFECB3),
-                onPressed: () => context.go('/'),
+                onPressed: () => showConfirmationDialog(context),
                 textColor: Colors.grey[900],
               ),
             ],

@@ -49,3 +49,5 @@ flutter_native_splash:
   image: assets/background/dice_background.jpg
   android: true
   ios: true
+  android_gravity: fill
+  ios_content_mode: scaleAspectFill

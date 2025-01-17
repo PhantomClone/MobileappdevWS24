@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../model/dice_roll.dart';
 import '../model/kniffel_field.dart';
 import '../state/play_state.dart';
+import 'dialog/confim_back.dart';
 import 'dice_screen.dart';
 import 'kniffel_field_screen.dart';
 
@@ -49,12 +50,7 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
                       size: 40,
                     ),
                     onPressed: () {
-                      final gameState = Provider.of<KniffelGameState>(context, listen: false);
-                      if (gameState.gameId == null) {
-                        context.go('/localGameSetup');
-                      } else {
-                        context.go('/wait_for_players');
-                      }
+                      showConfirmationDialog(context);
                     },
                     splashColor: Colors.transparent,
                   ),
