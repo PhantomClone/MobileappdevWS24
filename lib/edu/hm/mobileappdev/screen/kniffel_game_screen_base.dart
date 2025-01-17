@@ -30,9 +30,9 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/background/dice_background.jpg'), // Hintergrundbild
+            image: AssetImage('assets/background/dice_background.jpg'),
             fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken), // Bild abdunkeln
+            colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
           ),
         ),
         child: Padding(
@@ -44,32 +44,28 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
                 children: [
                   IconButton(
                     icon: Icon(
-                      Icons.arrow_back_rounded, // Zurück-Pfeil-Icon
+                      Icons.arrow_back_rounded,
                       color: Colors.amber[100],
                       size: 40,
                     ),
                     onPressed: () {
                       final gameState = Provider.of<KniffelGameState>(context, listen: false);
-
-                      // Navigiere je nach Modus
                       if (gameState.gameId == null) {
-                        // Im Offline-Modus, wenn kein gameId existiert
                         context.go('/localGameSetup');
                       } else {
-                        // Im Online-Modus, wenn gameId existiert
                         context.go('/wait_for_players');
                       }
                     },
-                    splashColor: Colors.transparent, // Verhindert den Farbüberlauf bei Klick
+                    splashColor: Colors.transparent,
                   ),
 
-                  Expanded( // Verhindert, dass der Abstand zu groß wird
+                  Expanded(
                     child: Text(
                       getTitle(),
                       style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
-                        color: Colors.amber[100], // Amber Farbe für den Titel
+                        color: Colors.amber[100],
                         shadows: [
                           Shadow(
                             blurRadius: 10.0,
@@ -84,11 +80,9 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
                 ],
               ),
               const SizedBox(height: 16),
-
-              // Card für Spieler Info, Neuversuche, Würfel und Neu-Werfen Button
               Card(
                 elevation: 10,
-                color: Color.fromRGBO(70, 70, 70, 0.8), // Durchscheinendes Grau
+                color: Color.fromRGBO(70, 70, 70, 0.8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
