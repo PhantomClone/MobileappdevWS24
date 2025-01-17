@@ -116,7 +116,7 @@ class _LocalGameSetupScreenState extends State<LocalGameSetupScreen> {
                 icon: Icons.arrow_back,
                 label: 'Zurück',
                 color: Color(0xFFFFECB3),
-                onPressed: () => showConfirmationDialog(context),
+                onPressed: () => context.go('/'),
                 textColor: Colors.grey[900],
               ),
             ],

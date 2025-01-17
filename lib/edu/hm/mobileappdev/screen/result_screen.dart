@@ -22,14 +22,6 @@ class _ResultScreenState extends State<ResultScreen> {
       final playerId = await playerRepository.addPlayer(player.name);
 
       await playerRepository.addPlayerScore(playerId, totalScore);
-
-      /*
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Player score erfolgreich gespeichert")),
-        );
-      }
-       */
     } catch (e) {
       if (retries > 0) {
         await Future.delayed(Duration(seconds: 2));
@@ -77,6 +69,13 @@ class _ResultScreenState extends State<ResultScreen> {
     }
 
     return sumUpperFields >= 63 ? 35 : 0;
+  }
+
+  @override
+  void dispose() {
+    final gameState = Provider.of<KniffelGameState>(context, listen: false);
+    gameState.resetPlayersToStart(List.empty());
+    super.dispose();
   }
 
   @override
