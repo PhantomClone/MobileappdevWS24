@@ -8,8 +8,7 @@ import '../../repository/player_repository.dart';
 import '../../state/play_state.dart';
 
 joinGameDialog(BuildContext context) {
-  final playerRepository =
-      Provider.of<PlayerRepository>(context, listen: false);
+  final playerRepository = Provider.of<PlayerRepository>(context, listen: false);
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -17,29 +16,68 @@ joinGameDialog(BuildContext context) {
       final gameIdController = TextEditingController();
 
       return AlertDialog(
+        backgroundColor: Colors.grey[900],
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Bitte gib deinen Spieler Name ein'),
+            Text(
+              'Kniffel Online ',
+              style: TextStyle(
+                color: Colors.amber[100],
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
             TextField(
               controller: playerNameController,
               keyboardType: TextInputType.text,
               maxLength: 15,
               decoration: InputDecoration(
-                hintText: 'Spieler Name',
+                hintText: 'Gib deinen Spielernamen ein',
+                hintStyle: TextStyle(color: Colors.white54, fontSize: 20),
                 counterText: '',
+                filled: true,
+                fillColor: Colors.grey[800],
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF212121)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFFFFECB3)),
+                ),
+              ),
+              style: TextStyle(color: Colors.white),
+            ),
+            const SizedBox(height: 16),
+            // Titel für die Game-ID
+            Text(
+              'Game-ID des Hosts:',
+              style: TextStyle(
+                color: Colors.amber[100],
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 5,),
-            Text('Bitte gib denn fünf Stelligen Zahlen Code ein'),
+            const SizedBox(height: 8),
+            // Textfeld für die Game-ID
             TextField(
               controller: gameIdController,
               keyboardType: TextInputType.number,
               maxLength: 5,
               decoration: InputDecoration(
-                hintText: 'Game ID (5 zahlen)',
+                hintText: '5-stellige Zahlenfolge',
+                hintStyle: TextStyle(color: Colors.white54, fontSize: 20),
                 counterText: '',
+                filled: true,
+                fillColor: Colors.grey[800],
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF212121)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFFFFECB3)),
+                ),
               ),
+              style: TextStyle(color: Colors.white),
             ),
           ],
         ),
@@ -48,42 +86,52 @@ joinGameDialog(BuildContext context) {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('Abbrechen'),
+            child: Text(
+              'Abbrechen',
+              style: TextStyle(color: Colors.amber[100], fontSize: 17),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
               final inputText = gameIdController.text.trim();
 
-              if (inputText.length == 5 &&
-                  RegExp(r'^\d{5}$').hasMatch(inputText)) {
-                final client =
-                    Provider.of<KniffelServiceClient>(context, listen: false);
-                final gameState =
-                    Provider.of<KniffelGameState>(context, listen: false);
+              if (inputText.length == 5 && RegExp(r'^\d{5}$').hasMatch(inputText)) {
+                final client = Provider.of<KniffelServiceClient>(context, listen: false);
+                final gameState = Provider.of<KniffelGameState>(context, listen: false);
 
                 final playerName = playerNameController.text.trim();
 
                 playerRepository.addPlayer(playerName).then((_) => {
-                      client
-                          .joinGame(inputText, playerName)
-                          .then((_) {
-                        gameState.setGameId(inputText);
-                        gameState.addLocalOnlinePlayer(Player(playerName));
-                        Navigator.of(context).pop();
-                        context.go('/wait_for_players');
-                      }).catchError((error) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error joining game: $error')),
-                        );
-                      })
-                    });
+                  client
+                      .joinGame(inputText, playerName)
+                      .then((_) {
+                    gameState.setGameId(inputText);
+                    gameState.addLocalOnlinePlayer(Player(playerName));
+                    Navigator.of(context).pop();
+                    context.go('/wait_for_players');
+                  }).catchError((error) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error joining game: $error')),
+                    );
+                  })
+                });
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Bitte gib genau 5 zahlen ein.')),
+                  SnackBar(content: Text('Bitte gib genau 5 Zahlen ein.')),
                 );
               }
             },
-            child: Text('Spiel beitretten'),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              backgroundColor: Colors.amber[100],
+            ),
+            child: Text(
+              'Spiel beitreten',
+              style: TextStyle(color: Colors.grey[900], fontWeight: FontWeight.bold, fontSize: 20),
+            ),
           ),
         ],
       );
