@@ -69,6 +69,7 @@ createGameDialog(BuildContext context) {
               final inputText = playerNameController.text.trim();
               playerRepository.addPlayer(inputText).then((_) => {
                 client.createGame(inputText).then((gameId) {
+                  gameState.resetPlayers(List.empty());
                   gameState.setGameId(gameId.id);
                   gameState.addLocalOnlinePlayer(Player(inputText));
 

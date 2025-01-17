@@ -74,7 +74,7 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   void dispose() {
     final gameState = Provider.of<KniffelGameState>(context, listen: false);
-    gameState.resetPlayersToStart(List.empty());
+    gameState.resetPlayersToStart();
     super.dispose();
   }
 
@@ -228,7 +228,7 @@ class _ResultScreenState extends State<ResultScreen> {
                 color: Colors.grey.shade900,
                 onPressed: () {
                   final gameState = Provider.of<KniffelGameState>(context, listen: false);
-                  gameState.resetPlayersToStart(gameState.players);
+                  gameState.resetPlayersToStart();
                   context.go('/play');
                 },
               ),

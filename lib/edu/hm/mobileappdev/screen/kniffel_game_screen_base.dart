@@ -181,6 +181,7 @@ abstract class KniffelGameScreenBase<T extends StatefulWidget>
 
   Expanded buildKniffelFields(Player currentPlayer, KniffelGameState gameState) {
     return Expanded(
+      key: UniqueKey(),
       child: ListView(
         children: KniffelField.values.map((field) {
           return KniffelFieldScreen(

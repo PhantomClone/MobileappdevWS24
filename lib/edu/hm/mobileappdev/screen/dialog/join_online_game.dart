@@ -105,6 +105,7 @@ joinGameDialog(BuildContext context) {
                   client
                       .joinGame(inputText, playerName)
                       .then((_) {
+                    gameState.resetPlayers(List.empty());
                     gameState.setGameId(inputText);
                     gameState.addLocalOnlinePlayer(Player(playerName));
                     Navigator.of(context).pop();

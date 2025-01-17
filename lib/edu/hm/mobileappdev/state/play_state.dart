@@ -47,6 +47,9 @@ class KniffelGameState {
         ..addAll(players);
     _currentPlayerIndex = 0;
     _localOnlinePlayers.clear();
+    _gameId = null;
+    _gameState = game.GameState(gameStarted: false);
+    _localOnlinePlayers.clear();
   }
 
   void nextTurn() {
@@ -55,7 +58,7 @@ class KniffelGameState {
     }
   }
 
-  void resetPlayersToStart(List<Player> players) {
+  void resetPlayersToStart() {
     for (var player in players) {
       player.scoreCard.clear();
     }
