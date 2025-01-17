@@ -58,74 +58,150 @@ class _OnlineWaitForPlayersScreenState extends State<OnlineWaitForPlayersScreen>
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Game ID: ${gameState.gameId ?? 'Lade...'}'),
-        backgroundColor: Colors.teal,
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (gameState.gameId != null) ...[
-              Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Warten auf Spieler...',
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Spieler:',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 16),
-                      SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                          itemCount: gameState.players.length,
-                          itemBuilder: (context, index) {
-                            final player = gameState.players[index];
-                            return ListTile(
-                              title: Text(player.name),
-                            );
-                          },
-                        ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/background/dice_background.jpg'), // Dein Hintergrundbild
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.4),
+              BlendMode.darken,
+            ),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // Game ID als Text oben am Bildschirmrand
+              Padding(
+                padding: const EdgeInsets.only(top: 40.0),
+                child: Text(
+                  'Deine Game-ID: ${gameState.gameId ?? 'Lade...'}',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.amber[100],
+                    shadows: [
+                      Shadow(
+                        blurRadius: 10.0,
+                        color: Colors.black.withOpacity(0.5),
+                        offset: Offset(3.0, 3.0),
                       ),
                     ],
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
-            ] else ...[
-              CircularProgressIndicator(),
+              const SizedBox(height: 16),
+              Transform.rotate(
+                angle: -0.1, // Winkel in Bogenmaß (hier leicht nach links kippen)
+                child: Text(
+                  'Teile sie mit deinen Freunden!',
+                  style: TextStyle(
+                    color: Colors.amber[100],
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Inhalt, der die Spieler anzeigt oder den Ladeindikator
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: gameState.gameId != null
+                      ? Card(
+                    elevation: 10,
+                    color: Color.fromRGBO(70, 70, 70, 0.8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Warten auf weitere Spieler...',
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.bold, color: Colors.amber[100]),
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'Aktuell im Spiel:',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                          ),
+                          SizedBox(height: 16),
+                          SizedBox(
+                            height: 200,
+                            child: ListView.builder(
+                              itemCount: gameState.players.length,
+                              itemBuilder: (context, index) {
+                                final player = gameState.players[index];
+                                return Card(
+                                  color: Colors.grey[800],
+                                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                                  elevation: 4,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: ListTile(
+                                    leading: index == 0
+                                        ? Icon(
+                                      Icons.wifi,
+                                      color: Colors.amber[100],
+                                      size: 24,
+                                    )
+                                        : null,
+                                    title: Text(
+                                      player.name,
+                                      style: TextStyle(color: Colors.amber[100], fontSize: 18),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ),
+              SizedBox(height: 16),
+              // Start-Button
+              ElevatedButton(
+                onPressed: gameState.players.isNotEmpty
+                    ? () {
+                  client.startGame(gameState.gameId!);
+                }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber[100],
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text('Spiel starten', style: TextStyle(fontSize: 20, color: Colors.grey[900])),
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: () => context.go('/'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber[100],
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text('Zurück', style: TextStyle(fontSize: 20, color: Colors.grey[900])),
+              ),
             ],
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: gameState.players.isNotEmpty
-                  ? () {
-                client.startGame(gameState.gameId!);
-              }
-                  : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text('Spiel starten', style: TextStyle(fontSize: 16)),
-            ),
-          ],
+          ),
         ),
       ),
     );
