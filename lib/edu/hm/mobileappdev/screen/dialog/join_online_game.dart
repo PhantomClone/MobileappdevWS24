@@ -93,32 +93,39 @@ joinGameDialog(BuildContext context) {
           ),
           ElevatedButton(
             onPressed: () {
-              final inputText = gameIdController.text.trim();
+              final gameIdInput = gameIdController.text.trim();
+              final playerName = playerNameController.text.trim();
 
-              if (inputText.length == 5 && RegExp(r'^\d{5}$').hasMatch(inputText)) {
-                final client = Provider.of<KniffelServiceClient>(context, listen: false);
-                final gameState = Provider.of<KniffelGameState>(context, listen: false);
+              // Überprüfe, ob der Name zwischen 3 und 15 Zeichen liegt
+              if (playerName.length >= 3 && playerName.length <= 15) {
+                if (gameIdInput.length == 5 && RegExp(r'^\d{5}$').hasMatch(gameIdInput)) {
+                  final client = Provider.of<KniffelServiceClient>(context, listen: false);
+                  final gameState = Provider.of<KniffelGameState>(context, listen: false);
 
-                final playerName = playerNameController.text.trim();
-
-                playerRepository.addPlayer(playerName).then((_) => {
-                  client
-                      .joinGame(inputText, playerName)
-                      .then((_) {
-                    gameState.resetPlayers(List.empty());
-                    gameState.setGameId(inputText);
-                    gameState.addLocalOnlinePlayer(Player(playerName));
-                    Navigator.of(context).pop();
-                    context.go('/wait_for_players');
-                  }).catchError((error) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Error joining game: $error')),
-                    );
-                  })
-                });
+                  playerRepository.addPlayer(playerName).then((_) => {
+                    client
+                        .joinGame(gameIdInput, playerName)
+                        .then((_) {
+                      gameState.resetPlayers(List.empty());
+                      gameState.setGameId(gameIdInput);
+                      gameState.addLocalOnlinePlayer(Player(playerName));
+                      Navigator.of(context).pop();
+                      context.go('/wait_for_players');
+                    }).catchError((error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error joining game: $error')),
+                      );
+                    })
+                  });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Bitte gib genau 5 Zahlen ein.')),
+                  );
+                }
               } else {
+                // Wenn der Name nicht zwischen 3 und 15 Zeichen ist
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Bitte gib genau 5 Zahlen ein.')),
+                  SnackBar(content: Text('Der Name muss zwischen 3 und 15 Zeichen lang sein.')),
                 );
               }
             },

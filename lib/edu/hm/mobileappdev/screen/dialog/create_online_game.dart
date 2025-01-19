@@ -8,8 +8,7 @@ import '../../online/client.dart';
 import '../../state/play_state.dart';
 
 createGameDialog(BuildContext context) {
-  final playerRepository =
-  Provider.of<PlayerRepository>(context, listen: false);
+  final playerRepository = Provider.of<PlayerRepository>(context, listen: false);
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -62,24 +61,32 @@ createGameDialog(BuildContext context) {
           ),
           ElevatedButton(
             onPressed: () {
-              final client =
-              Provider.of<KniffelServiceClient>(context, listen: false);
-              final gameState =
-              Provider.of<KniffelGameState>(context, listen: false);
+              final client = Provider.of<KniffelServiceClient>(context, listen: false);
+              final gameState = Provider.of<KniffelGameState>(context, listen: false);
               final inputText = playerNameController.text.trim();
-              playerRepository.addPlayer(inputText).then((_) => {
-                client.createGame(inputText).then((gameId) {
-                  gameState.resetPlayers(List.empty());
-                  gameState.setGameId(gameId.id);
-                  gameState.addLocalOnlinePlayer(Player(inputText));
 
-                  context.go('/wait_for_players');
-                }).catchError((error) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error creating game: $error')),
-                  );
-                })
-              });
+              if (inputText.length >= 3 && inputText.length <= 15) {
+                playerRepository.addPlayer(inputText).then((_) {
+                  client.createGame(inputText).then((gameId) {
+                    gameState.resetPlayers(List.empty());
+                    gameState.setGameId(gameId.id);
+                    gameState.addLocalOnlinePlayer(Player(inputText));
+
+                    context.go('/wait_for_players');
+                  }).catchError((error) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error creating game: $error')),
+                    );
+                  });
+                });
+              } else {
+                // Zeige eine Snackbar an, wenn der Name ungültig ist
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Der Name muss zwischen 3 und 15 Zeichen lang sein.'),
+                  ),
+                );
+              }
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
